@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mad Apple">
+<meta name="theme-color" content="#14202e">
+<title>Mad Apple Winter Workouts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a coach's clipboard — sticky week tabs, then attendance → auto groups → the 2-hour card → tracking */
+:root{
+  --bg:#f3f5f7; --card:#ffffff; --ink:#14202e; --muted:#5d6b7a; --line:#d9dfe6;
+  --apple:#c4122f; --apple-soft:#fbe7ea; --turf:#1f7a4d; --turf-soft:#e3f2ea; --clay:#b8661f; --clay-soft:#f7ece0; --sky:#2a5d9f; --sky-soft:#e5edf8;
+  --now:#ffd23f;
+  --display:"Saira Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0e141b; --card:#16202b; --ink:#e8edf2; --muted:#93a1b0; --line:#273443;
+  --apple:#ff4d63; --apple-soft:#3a1820; --turf:#4cc38a; --turf-soft:#13301f; --clay:#e5974f; --clay-soft:#38260f; --sky:#7fb0ef; --sky-soft:#152844; --now:#e0b52a; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#14202e}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:#14202e;color:#f3f5f7}
+header.top .inner{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px 0}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brand h1{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.1}
+.brand h1 span{color:#ff4d63}
+.sync{font-size:12px;opacity:.75;white-space:nowrap;font-family:var(--mono)}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:10px 0;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:inherit;opacity:.7;padding:8px 12px 10px;border-radius:8px 8px 0 0;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+nav.tabs a small{display:block;font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:0;text-transform:none;margin-top:3px;opacity:.85}
+nav.tabs a[aria-current="page"]{opacity:1;background:var(--bg);color:var(--ink)}
+nav.tabs a:focus-visible{outline:2px solid var(--now);outline-offset:-2px}
+
+.hero{padding-block:20px 6px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--apple);font-weight:700}
+.hero h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,7vw,44px);line-height:1;margin:4px 0 8px;text-transform:uppercase;text-wrap:balance}
+.hero p{margin:0;max-width:62ch;color:var(--muted)}
+.cues{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cue{display:inline-flex;gap:8px;align-items:baseline;background:var(--apple-soft);color:var(--ink);padding:6px 10px;border-radius:6px;font-weight:600;font-size:14px}
+.cue b{font-family:var(--mono);font-size:11px;color:var(--apple);letter-spacing:.06em;text-transform:uppercase}
+.cue.blue{background:var(--sky-soft)} .cue.blue b{color:var(--sky)}
+
+section.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:16px}
+.panel h3{font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.03em;margin:0;line-height:1.1}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.count{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700;font-size:14px}
+.mode{font-size:12px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--sky-soft);color:var(--sky);white-space:nowrap}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.chip{display:flex;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);background:transparent;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;min-height:48px}
+.chip .num{font-family:var(--display);font-weight:800;font-size:20px;width:30px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+.chip .nm{font-weight:600;font-size:14px;line-height:1.2;min-width:0}
+.chip .nm small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] .num{color:var(--apple)}
+.chip[aria-pressed="true"] .nm small{color:inherit;opacity:.7}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--apple);outline-offset:2px}
+
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.grp{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.grp h4{margin:0 0 6px;font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.03em}
+.grp ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:14px}
+.grp .path{font-size:12px;color:var(--muted);margin-top:6px}
+.tag{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--apple);margin-left:2px}
+.empty{color:var(--muted);font-size:14px;margin:0}
+
+.timeline{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.blk{display:grid;grid-template-columns:72px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.blk.now{border-color:var(--now);box-shadow:0 0 0 2px var(--now)}
+.time{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;line-height:1.3}
+.time small{display:block;color:var(--muted);font-weight:500}
+.time .live{display:inline-block;margin-top:6px;background:var(--now);color:#14202e;font-size:10px;padding:1px 6px;border-radius:4px}
+.blk h4{margin:0;font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.02em;line-height:1.15}
+.meta{font-size:12px;color:var(--muted);margin:2px 0 6px}
+.blk ul{margin:6px 0 0;padding-left:18px}
+.blk li{margin:3px 0}
+.blk p{margin:6px 0 0}
+.blk > div{min-width:0}
+.stations{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+.st{border-radius:10px;padding:12px;border:1px solid var(--line)}
+.st.p{background:var(--apple-soft)} .st.h{background:var(--sky-soft)} .st.d{background:var(--turf-soft)}
+.st h5{margin:0;font-size:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.st.p h5{color:var(--apple)} .st.h h5{color:var(--sky)} .st.d h5{color:var(--turf)}
+.st strong{display:block;font-size:15px;margin:2px 0 2px}
+.st ul{font-size:14px}
+.scroll{overflow-x:auto}
+.rot table{border-collapse:collapse;width:100%;min-width:320px;font-size:13px;margin-top:10px}
+.rot th,.rot td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
+.rot th{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.rot td.t{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px}
+.pill.p{background:var(--apple-soft);color:var(--apple)} .pill.h{background:var(--sky-soft);color:var(--sky)} .pill.d{background:var(--turf-soft);color:var(--turf)}
+.flex{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}
+
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+textarea{width:100%;min-height:110px;resize:vertical}
+.btn{font:inherit;font-weight:700;border-radius:10px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);padding:10px 14px;cursor:pointer;min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Bullpen charter */
+.pen-top{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.pen-top label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.pen-top select{width:100%}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-weight:700;border:0;background:transparent;color:var(--muted);padding:8px 14px;cursor:pointer;min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.sb{background:var(--bg);border-radius:10px;padding:8px 10px}
+.sb b{display:block;font-family:var(--display);font-size:28px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.sb span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sb.good b{color:var(--turf)} .sb.warn b{color:var(--clay)} .sb.bad b{color:var(--apple)}
+.countline{font-family:var(--mono);font-weight:700;font-size:14px;margin-bottom:8px}
+.pitchpad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.pitchpad .wide{grid-column:span 3}@media (max-width:360px){.pitchpad{grid-template-columns:1fr 1fr}.pitchpad .wide{grid-column:span 2}}
+.pp{font:inherit;font-family:var(--display);font-size:24px;font-weight:800;text-transform:uppercase;border-radius:12px;border:0;padding:16px;cursor:pointer;min-height:64px}
+.pp.k{background:var(--turf);color:#fff} .pp.b{background:var(--apple);color:#fff}
+.pp.ip,.pp.f{background:var(--sky-soft);color:var(--sky);font-size:18px}
+.pp.nb{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);font-size:18px}
+.trail{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;min-height:22px}
+.trail span{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--bg)}
+.trail span.s{color:var(--turf)} .trail span.bl{color:var(--apple)} .trail span.sep{background:transparent;color:var(--muted)}
+.capwarn{margin-top:8px;font-weight:700;color:var(--apple);font-size:14px}
+
+table.data{border-collapse:collapse;width:100%;font-size:13px}
+table.data th,table.data td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase}
+table.data input{width:68px;padding:6px;text-align:center}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--turf)}
+.dot.no{background:transparent;border:1.5px solid var(--line)}
+.ptog{font:inherit;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.ptog[aria-pressed="true"]{background:var(--apple);border-color:var(--apple);color:#fff}
+.up{color:var(--turf);font-weight:700} .down{color:var(--apple);font-weight:700}
+details.panel summary{cursor:pointer;list-style:none}
+details.panel summary::-webkit-details-marker{display:none}
+details.panel summary h3::after{content:" +";color:var(--muted)}
+details.panel[open] summary h3::after{content:" −"}
+table.ref{border-collapse:collapse;width:100%;font-size:14px}
+table.ref th,table.ref td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.ref th{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tight{margin:0;padding-left:20px} .tight li{margin:4px 0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 16px}
+.lock{border-color:var(--apple)}
+.lock form{display:flex;gap:8px;flex-wrap:wrap}
+.lock input{flex:1 1 140px;font-size:16px}
+.err{color:var(--apple);font-size:13px;font-weight:600;margin:8px 0 0}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14202e;color:#f3f5f7;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+@media (max-width:480px){.blk{grid-template-columns:1fr;gap:6px}.time small{display:inline;margin-left:6px}.scoreboard{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:no-preference){.chip,.pp{transition:background .12s,color .12s,transform .08s}.pp:active{transform:scale(.97)}}
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+<header class="top"><div class="inner">
+  <div class="brand"><h1>Mad Apple <span>Winter</span></h1><span class="sync" id="sync"></span></div>
+  <nav class="tabs" id="tabs" aria-label="Weeks"></nav>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- Plan content (no player names live in this file) ---------- */
+const BLOCKS=[
+ {s:"17:50",e:"18:00",k:"setup",name:"Arrive + set up",where:"Turf",lead:"Captains",txt:"Turf shoes on, J-bands out, cages and screens set, phones in bags. Coaches take attendance here."},
+ {s:"18:00",e:"18:12",k:"warm",name:"Dynamic warm-up",where:"Turf",lead:"Coach Sam",txt:"Jog 2 laps → high knees, butt kicks, A-skips, lunge with twist, lateral shuffles, carioca → 3 × 20-yd build-up sprints. Two lines facing a coach; nobody jogs alone."},
+ {s:"18:12",e:"18:20",k:"arm",name:"Arm care (J-bands)",where:"Turf",lead:"Coach Justice",txt:"10 each: forward fly, reverse fly, internal and external rotation at 90°, high pulls, low pulls, throwing-motion pulls. Partners count reps out loud."},
+ {s:"18:20",e:"18:35",k:"throw",name:"Throwing progression",where:"Turf, 60 ft",lead:"Both coaches",txt:"Pairs on a line. Wrist flips (10) → one-knee (10) → rocker (10) → full throws back to 60 ft (15). Chest is the target; partner calls 'hit' or 'miss'. Last 2 minutes: quick-hands race, 20 throws, fastest pair wins."},
+ {s:"18:35",e:"19:35",k:"stations",name:"Stations",where:"Pen · Cages · Turf",lead:"Justice / captain / Sam"},
+ {s:"19:35",e:"19:52",k:"cond",name:"Conditioning",where:"Weight area + turf",lead:"Coach Sam"},
+ {s:"19:52",e:"20:00",k:"close",name:"Compete + close",where:"Turf",lead:"Both coaches"}
+];
+const WEEKS=[
+{id:"w1",date:"2026-10-30",label:"Oct 30",theme:"Baseline",focus:"Measure everything so every kid can see himself improve by December. Set the standard: we hustle between stations and nobody stands.",cue:"Every throw has a target.",cap:"20 pitches · 70% · fastballs only",capN:20,tests:true,
+ P:{t:"Baseline bullpen",l:["Pre-pen on flat ground: 3 rocker, 3 hip-lead, 5 from the stretch","20 fastballs at 70%. Catcher calls the count out loud after each pitch","Film side and front in slow-mo. Chart every pen below","Non-throwers: catch, chart on the phone, then towel drill ×15 and balance-point holds ×10"]},
+ H:{t:"HitTrax baseline",l:["Cage 1 (HitTrax): 10 swings each; captain logs max exit velo and line-drive %","Cage 2 (tee): pause tee ×10, high tee ×5, low tee ×5","Swap cages every 5 minutes"]},
+ D:{t:"Ground-ball fundamentals",l:["Short-hop series with a partner, 15 ft: backhand, forehand, middle ×10 each","Funnel + footwork: field, funnel to belly, crow hop, throw to a target","Fungo rounds: 3 balls each, sprint back to the line"]},
+ C:{t:"Test day",l:["30-yd sprint, best of 2 (stopwatch)","Broad jump, best of 2 (tape on turf)","Plank hold to failure","Enter results in Test results below"]},
+ X:"Short-hop knockout: miss one and you're out. Last kid standing picks next week's warm-up music.",
+ low:"6–8: pens in Cage 3 with hitters standing in, then HitTrax. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart."},
+{id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,
+ P:{t:"Hit the Glove",l:["Pre-pen: rocker throws and hip-lead walk-ins","10 glove side, 10 arm side, 5 to a spot the catcher calls","Scoring: glove = 2, strike = 1, ball = 0. Beat last week's strike %","Each pitcher gets ONE cue from Coach Justice, saved with his pen"]},
+ H:{t:"Load and separation",l:["Pause tee: load, hold 1 second, swing ×10","Step-back tee (walk-in rhythm) ×8","HitTrax: 3 rounds of 6, line drives over 80 exit velo","Swap cages every 5 minutes"]},
+ D:{t:"Range and throws on the run",l:["Backhands and forehands: crossover step first, no drop-step","Slow rollers: charge, barehand or glove, throw on the run","Outfield: drop-step and go on balls over the head"]},
+ C:{t:"Power",l:["Med-ball rotational throws, both sides 3 × 5","Lateral bounds with stick 3 × 5 each side","10-yd sprint starts from a lead ×6"]},
+ X:"Three-man relay race: outfield → cutoff → home. Fastest clean relay wins; a bad throw restarts the clock.",
+ low:"6–8: Hit the Glove in Cage 3 with a hitter tracking (no swing), then HitTrax. 5 or fewer: Hit the Glove as a competition between all of them."},
+{id:"w3",date:"2026-11-13",label:"Nov 13",theme:"Changeup + whole field",focus:"Every pitcher leaves with a changeup he trusts. Hitters learn to drive the outer third the other way.",cue:"Same arm speed, slower ball.",cap:"25 pitches · 75% · 15 FB + 10 CH",capN:25,
+ P:{t:"Changeup intro",l:["Learn the grip on flat ground at 45 ft: circle change or three-finger change","Cue: throw it like a fastball through the catcher; the grip slows it, not the arm","On the mound: 15 fastballs, then 10 changeups (switch the charter to CH)","Changeup strikes chart separately"]},
+ H:{t:"Use the whole field",l:["Inside-out tee: ball on the inner half, drive it to the opposite field ×8","Outer-third front toss ×10","HitTrax spray goal: 4 of 6 balls to the middle or opposite field"]},
+ D:{t:"Double plays",l:["SS and 2B feeds from 20 ft: underhand, backhand flip, pivot throw","2B turns: across the bag and step-back","1B short-hop picks ×10 each"]},
+ C:{t:"Strength circuit",l:["Goblet squats, split squats, push-ups, band rows","3 rounds, 8–10 reps, 30-second side planks","60-ft base-to-base sprints ×6"]},
+ X:"Hit the Glove showdown: pitchers vs. pitchers, changeups count double.",
+ low:"6–8: pitchers throw changeups to hitters in Cage 3 (live, take-or-hit). 5 or fewer: everyone learns the changeup grip, then HitTrax."},
+{id:"w4",date:"2026-11-20",label:"Nov 20",theme:"Win the count",focus:"Win 2 of the first 3 pitches. Hitters learn a two-strike approach. Pitchers field their position.",cue:"Strike one, then change speeds.",cap:"30 pitches · 80% · FB + CH",capN:30,
+ P:{t:"Count games",l:["1-1 Game: every pitch starts at 1-1. Strike wins the at-bat","3-Pitch Battles: 6 batters, win if 2 of 3 are strikes (tap New batter between)","Use the changeup in fastball counts (1-0, 2-1)","Compare first-pitch strike % to Week 1 in the Season tab"]},
+ H:{t:"Two-strike hitting",l:["Two-strike stance: choke up, widen, shorten the stride","Battle drill: machine on the black, foul off or put it in play ×8","Front toss mixing fast and slow ×10"]},
+ D:{t:"PFP (pitchers' fielding)",l:["Comebackers to 2B, ball to the 1B side: pitcher covers 1B","Bunts down both lines with a call ('Me! Me!')","3B and catcher communication on pop-ups near the plate"]},
+ C:{t:"Baserunning",l:["Rounding 1B turns: hit the inside corner ×6","First-step leads and steal reads off a coach","Core circuit: dead bugs, bird dogs, side planks"]},
+ X:"1-1 Game team scoring: each group's pitchers throw 10 pitches at 1-1. Group with the most strikes wins.",
+ low:"6–8: live 3-Pitch Battles in Cage 3, hitters on a two-strike count. 5 or fewer: PFP for everyone, then count games."},
+{id:"w5",date:"2026-11-27",label:"Nov 27",theme:"Light week (Thanksgiving)",focus:"Expect low turnout. Rest arms, sharpen recognition, and run the situations that need few bodies.",cue:"See it slow, react fast.",cap:"Flat ground only · 20 throws · 70%",capN:0,
+ P:{t:"Flat-ground mechanics",l:["No mound this week","Balance-point holds, hip-lead throws, stride-line on tape","Changeup feel at 45 ft ×20","Video review of Week 1 vs. now"]},
+ H:{t:"Pitch recognition",l:["Machine changes speeds; hitter calls 'take' or 'hit' before swinging","Short-game bunting: sacrifice and drag ×8","Tee rounds to stay sharp"]},
+ D:{t:"Bunt defense + rundowns",l:["Bunt coverage with runner on 1B","First-and-third: throw through, cut by SS/2B, throw to 3B","Rundowns: one throw max, ball shown high"]},
+ C:{t:"Mobility",l:["Band work and hip mobility flow","Agility ladder, 8 patterns","Light sprints ×4"]},
+ X:"Rundown race: fewest throws to make the tag.",
+ low:"This week is built for 5–8 kids. With 9+, add a second fungo line and keep everything else."},
+{id:"w6",date:"2026-12-04",label:"Dec 4",theme:"Live ABs + re-test",focus:"Pitchers face our hitters for real. Re-test everything from Week 1 and show each kid his numbers.",cue:"Attack the zone. A walk is worse than a single.",cap:"35 pitches incl. live · 85%",capN:35,tests:true,
+ P:{t:"Live at-bats",l:["Cage 3: each pitcher throws 2 innings vs. our hitters","Catcher calls the game, pitcher works on a 12-second tempo","Chart every batter: strike %, first-pitch %, ahead after 3"]},
+ H:{t:"Live + HitTrax re-test",l:["Live ABs vs. our pitchers in Cage 3","HitTrax re-test: 10 swings, log max exit velo and line-drive %","Compare to Week 1 in the Season tab"]},
+ D:{t:"Situations",l:["Runners on, coach calls the situation, everyone talks before the pitch","Cuts and relays with live runners","Pop-up communication"]},
+ C:{t:"Re-test",l:["30-yd sprint, broad jump, plank","Enter results below; Season tab shows Week 1 vs. Week 6"]},
+ X:"HitTrax Home Run Derby: top exit velocity wins.",
+ low:"6–8: everyone pitches 1 inning live and hits 2 ABs. 5 or fewer: coaches pitch live too."}
+];
+const STN={P:{c:"p",name:"Pitching",lead:"Coach Justice · pitching lanes"},H:{c:"h",name:"Hitting",lead:"Captain · Cage 1 HitTrax + Cage 2 tee"},D:{c:"d",name:"Defense",lead:"Coach Sam · turf infield"}};
+const ROT={A:["P","H","D"],B:["H","D","P"],C:["D","P","H"]};
+
+/* ---------- State ---------- */
+const URL_=(window.MA_CONFIG&&window.MA_CONFIG.scriptUrl||"").trim();
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let pin=LS.get("ma_pin")||"";
+let D=null;            // data from the Sheet
+let pinErr="", loading=false, lastSync=null;
+let pending=0;         // writes in flight
+let current=null;
+let penPitcher=LS.get("ma_pen_pitcher")||"";
+let penType="FB";
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const toMin=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
+const fmt=t=>{let[h,m]=t.split(":").map(Number);return (h>12?h-12:h)+":"+String(m).padStart(2,"0")};
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const truthy=v=>v===true||v==="TRUE"||v==="true"||v===1;
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2600)}
+
+/* ---------- Derived data ---------- */
+function roster(){return (D?D.roster:[]).map(r=>({n:Number(r.Number),f:r.First,l:r.Last,p:truthy(r.Pitcher)})).filter(r=>r.n||r.n===0).sort((a,b)=>a.n-b.n)}
+function presentNums(wid){const s=new Set();(D?D.attendance:[]).forEach(r=>{if(r.Week===wid&&truthy(r.Present))s.add(Number(r.Number))});return s}
+function pens(wid){return (D?D.bullpens:[]).filter(r=>r.Week===wid)}
+function tests(wid){return (D?D.tests:[]).filter(r=>r.Week===wid)}
+function note(wid){const r=(D?D.notes:[]).find(r=>r.Week===wid);return r?r.Notes:""}
+function modeFor(n){return n>=9?3:n>=6?2:1}
+function buildGroups(list,k){
+  const order=[...list.filter(p=>p.p),...list.filter(p=>!p.p)], g=Array.from({length:k},()=>[]);
+  order.forEach((p,i)=>{const r=Math.floor(i/k),c=i%k;g[r%2?k-1-c:c].push(p)});return g;
+}
+
+/* ---------- Network ---------- */
+async function load(silent){
+  if(!URL_||!pin||pending) return;
+  loading=!silent; if(!silent)render();
+  try{
+    const r=await fetch(URL_+"?pin="+encodeURIComponent(pin)+"&t="+Date.now());
+    const j=await r.json();
+    if(!j.ok){ if(j.error==="pin"){pinErr="That PIN didn't work. Check with Coach Sam.";pin="";LS.del("ma_pin");D=null} }
+    else { if(!pending){D=j;lastSync=new Date();pinErr=""} }
+  }catch(e){ if(!silent) toast("Couldn't reach the team sheet. Check your connection.") }
+  loading=false; safeRender();
+}
+let chain=Promise.resolve();
+function send(body){
+  pending++; updateSync();
+  chain=chain.then(async()=>{
+    try{
+      const r=await fetch(URL_,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,pin})});
+      const j=await r.json();
+      pending--;
+      if(!j.ok){toast(j.error==="pin"?"PIN rejected. Sign in again.":"The sheet refused that save.");return false}
+      if(!pending){D=j;lastSync=new Date();safeRender()}
+      return true;
+    }catch(e){pending--;toast("Didn't save. Check your connection and try again.");updateSync();return false}
+  });
+  return chain;
+}
+function updateSync(){const s=$("#sync");if(!s)return;
+  s.textContent=!URL_?"not connected":!pin?"locked":pending?"saving…":lastSync?"synced "+lastSync.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"";}
+
+/* ---------- Routing ---------- */
+function defaultTab(){const t=todayStr();const w=WEEKS.find(w=>w.date>=t);return w?w.id:"w6"}
+function route(){const h=location.hash.slice(1);current=(h==="season"||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
+
+/* ---------- Views ---------- */
+function renderTabs(){
+  const t=$("#tabs");
+  t.innerHTML=WEEKS.map((w,i)=>`<a href="#${w.id}" ${current===w.id?'aria-current="page"':""}>Wk ${i+1}<small>${w.label}</small></a>`).join("")+
+   `<a href="#season" ${current==="season"?'aria-current="page"':""}>Season<small>Progress</small></a>`;
+  const a=t.querySelector('[aria-current]'); if(a) a.scrollIntoView({block:"nearest",inline:"center"});
+}
+function lockPanel(){
+  if(!URL_) return `<section class="panel lock"><h3>Not connected yet</h3><p class="hint" style="margin-top:8px">The practice plan works below. Attendance and stats turn on once the team sheet's web address is added to config.js.</p></section>`;
+  if(pin&&D) return "";
+  if(pin&&!D) return `<section class="panel"><p class="empty">${loading?"Loading the team sheet…":"Connecting…"}</p></section>`;
+  return `<section class="panel lock"><div class="panel-head"><h3>Coach sign-in</h3></div>
+   <p class="hint">Enter the team PIN to see the roster, take attendance and log numbers. The plan below is open to everyone.</p>
+   <form id="pinform"><input id="pin" type="password" inputmode="text" autocomplete="current-password" placeholder="Team PIN" aria-label="Team PIN"><button class="btn" type="submit">Unlock</button></form>
+   ${pinErr?`<p class="err">${esc(pinErr)}</p>`:""}</section>`;
+}
+function stationCard(key,w){const s=STN[key],d=w[key];return `<div class="st ${s.c}"><h5>${s.name}</h5><strong>${esc(d.t)}</strong><div class="meta">${s.lead}</div><ul>${d.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
+function stationsBlock(w,n){
+  const m=modeFor(n); let rot="";
+  if(n&&m===3){const times=["6:35","6:55","7:15"];
+    rot=`<div class="rot scroll"><table><thead><tr><th>Time</th><th>Group A</th><th>Group B</th><th>Group C</th></tr></thead><tbody>${times.map((t,i)=>`<tr><td class="t">${t}</td>${["A","B","C"].map(g=>{const s=STN[ROT[g][i]];return `<td><span class="pill ${s.c}">${s.name}</span></td>`}).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }else if(n&&m===2){
+    rot=`<div class="rot scroll"><table><thead><tr><th>Time</th><th>Group A</th><th>Group B</th></tr></thead><tbody><tr><td class="t">6:35</td><td><span class="pill p">Pitch + hit live · Cage 3</span></td><td><span class="pill d">Defense</span></td></tr><tr><td class="t">7:05</td><td><span class="pill d">Defense</span></td><td><span class="pill p">Pitch + hit live · Cage 3</span></td></tr></tbody></table></div>`;
+  }else if(n){
+    rot=`<div class="rot scroll"><table><thead><tr><th>Time</th><th>Everyone</th></tr></thead><tbody><tr><td class="t">6:35</td><td><span class="pill d">Defense</span></td></tr><tr><td class="t">6:55</td><td><span class="pill p">Bullpens · everyone throws</span></td></tr><tr><td class="t">7:15</td><td><span class="pill h">HitTrax</span></td></tr></tbody></table></div>`;
+  }
+  const noteTxt=!n?"3 stations × 20 min at full strength. The rotation fills in once attendance is taken.":m===3?"3 stations × 20 min. Whistle at 6:55 and 7:15, one minute to rotate. Hitting swaps cages every 5 minutes so 4 kids are always swinging.":m===2?"2 stations × 30 min. Pitchers throw to hitters in Cage 3 (Justice); Sam runs defense on turf.":"One group, three 20-minute blocks. Best night for one-on-one video and fixes.";
+  return `<p class="meta" style="margin:0">${noteTxt}</p>${rot}<div class="stations">${stationCard("P",w)}${stationCard("H",w)}${stationCard("D",w)}</div><div class="flex"><b>Low turnout:</b> ${esc(w.low)}</div>`;
+}
+function blockBody(b,w,n){
+  if(b.k==="stations") return stationsBlock(w,n);
+  if(b.k==="cond") return `<p><strong>${esc(w.C.t)}</strong></p><ul>${w.C.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+  if(b.k==="close") return `<p>${esc(w.X)}</p><p class="meta" style="margin-top:6px">Cooldown: band pull-aparts, sleeper stretch, cross-body stretch. Each coach gives one takeaway. Remind families to RSVP by Thursday 8 pm.</p>`;
+  return `<p>${esc(b.txt)}</p>`;
+}
+
+/* Bullpen charter: log is a list of pitches {r:"S"|"B", t:"FB"|"CH", nb:true when it starts a new batter} */
+function penKey(wid,num){return "ma_pen_"+wid+"_"+num}
+function getLog(wid,num){try{return JSON.parse(LS.get(penKey(wid,num))||"[]")}catch(e){return []}}
+function setLog(wid,num,log){LS.set(penKey(wid,num),JSON.stringify(log))}
+function batters(log){const b=[];log.forEach((p,i)=>{if(i===0||p.nb)b.push([]);b[b.length-1].push(p)});return b}
+function stats(log){
+  const bs=batters(log), pitches=log.length, strikes=log.filter(p=>p.r==="S").length;
+  const fps=bs.filter(b=>b[0].r==="S").length;
+  const ahead=bs.filter(b=>{const f=b.slice(0,3),k=f.filter(p=>p.r==="S").length;return k>=Math.min(2,f.length)}).length;
+  const ch=log.filter(p=>p.t==="CH"), chS=ch.filter(p=>p.r==="S").length;
+  const cur=bs.length?bs[bs.length-1]:[];
+  return {pitches,strikes,batters:bs.length,fps,ahead,ch:ch.length,chS,balls:cur.filter(p=>p.r==="B").length,ks:Math.min(2,cur.filter(p=>p.r==="S").length),ended:!!(log.length&&log[log.length-1].end)};
+}
+function pct(a,b){return b?Math.round(a/b*100):null}
+function grade(v,good,ok){return v==null?"":v>=good?"good":v>=ok?"warn":"bad"}
+function penPanel(w,present){
+  const R=roster();
+  const pitchersHere=R.filter(p=>p.p&&present.has(p.n)), others=R.filter(p=>!(p.p&&present.has(p.n)));
+  if(!R.some(p=>String(p.n)===penPitcher)) penPitcher=String((pitchersHere[0]||R[0]||{}).n??"");
+  const log=penPitcher?getLog(w.id,penPitcher):[];
+  const s=stats(log), sp=pct(s.strikes,s.pitches), fp=pct(s.fps,s.batters), ap=pct(s.ahead,s.batters);
+  const saved=pens(w.id).find(r=>String(r.Number)===penPitcher);
+  const savedRows=pens(w.id);
+  const opt=p=>`<option value="${p.n}" ${String(p.n)===penPitcher?"selected":""}>#${p.n} ${esc(p.f)} ${esc(p.l)}</option>`;
+  const trail=batters(log).map((b,i)=>(i?'<span class="sep">|</span>':"")+b.map(p=>`<span class="${p.r==="S"?"s":"bl"}">${p.f?"F":p.r==="S"?"K":"B"}${p.t==="CH"?"c":""}</span>`).join("")).join("");
+  const capHit=w.capN&&s.pitches>=w.capN;
+  return `<section class="panel" id="pen"><div class="panel-head"><h3>Bullpen charter</h3><span class="count">${w.capN?"Cap "+w.capN:"Flat ground week"}</span></div>
+  <p class="hint">A non-pitcher charts on a coach's phone. Tap every pitch. Walks, strikeouts and balls in play start the next batter on their own; tap <b>New batter</b> for anything else. Fouls count as strikes.</p>
+  <div class="pen-top"><label for="penwho">Pitcher<select id="penwho">${pitchersHere.length?`<optgroup label="Pitchers here tonight">${pitchersHere.map(opt).join("")}</optgroup>`:""}<optgroup label="${pitchersHere.length?"Everyone else":"Roster"}">${others.map(opt).join("")}</optgroup></select></label>
+   <div class="seg" role="group" aria-label="Pitch type"><button data-type="FB" aria-pressed="${penType==="FB"}">FB</button><button data-type="CH" aria-pressed="${penType==="CH"}">CH</button></div></div>
+  <div class="scoreboard">
+   <div class="sb ${grade(sp,60,50)}"><b>${sp==null?"–":sp+"%"}</b><span>Strikes ${s.strikes}/${s.pitches}</span></div>
+   <div class="sb ${grade(fp,60,50)}"><b>${fp==null?"–":fp+"%"}</b><span>1st-pitch K</span></div>
+   <div class="sb ${grade(ap,67,50)}"><b>${ap==null?"–":ap+"%"}</b><span>Ahead after 3</span></div>
+   <div class="sb"><b>${s.ch?s.chS+"/"+s.ch:"–"}</b><span>CH strikes</span></div></div>
+  <div class="countline">${s.ended?`Batter ${s.batters+1} · Count 0-0`:`Batter ${Math.max(1,s.batters)} · Count ${s.balls}-${s.ks}`}</div>
+  <div class="pitchpad"><button class="pp k" data-pitch="S">Strike</button><button class="pp b" data-pitch="B">Ball</button><button class="pp f" data-pitch="F">Foul</button>
+   <button class="pp ip" data-pitch="IP">In play</button><button class="pp nb" data-pitch="NB" style="grid-column:span 2">New batter</button></div>
+  <div class="trail" aria-label="Pitch log">${trail||'<span class="sep">No pitches yet</span>'}</div>
+  ${capHit?`<div class="capwarn">Pitch cap reached (${w.capN}). Finish this batter and shut him down.</div>`:""}
+  <div class="row" style="margin-top:12px"><input id="pencue" placeholder="His one cue (e.g. stay closed)" style="flex:1 1 200px" value="${esc(saved?saved.Cue:"")}">
+   <button class="btn" id="pensave" ${s.pitches?"":"disabled"}>Save pen</button><button class="btn ghost" id="penundo" ${s.pitches?"":"disabled"}>Undo</button><button class="btn ghost" id="penclear" ${s.pitches?"":"disabled"}>Clear</button></div>
+  ${saved?`<p class="hint" style="margin:8px 0 0">Saved for #${esc(saved.Number)}: ${esc(saved.Pitches)} pitches, ${esc(saved["Strike %"])}% strikes.</p>`:""}
+  ${savedRows.length?`<div class="scroll" style="margin-top:12px"><table class="data"><thead><tr><th>Tonight's pens</th><th>P</th><th>K%</th><th>1st K</th><th>Ahead</th><th>CH</th></tr></thead><tbody>${savedRows.map(r=>`<tr><td>#${esc(r.Number)} ${esc(r.Pitcher)}</td><td>${esc(r.Pitches)}</td><td>${esc(r["Strike %"])}%</td><td>${esc(r["1st-pitch strikes"])}/${esc(r["Batters faced"])}</td><td>${esc(r["Ahead after 3"])}/${esc(r["Batters faced"])}</td><td>${r.Changeups?esc(r["CH strikes"])+"/"+esc(r.Changeups):"–"}</td></tr>`).join("")}</tbody></table></div>`:""}
+  </section>`;
+}
+function testsPanel(w,present){
+  const R=roster(), list=present.size?R.filter(p=>present.has(p.n)):R, T=tests(w.id);
+  const v=(num,col)=>{const r=T.find(r=>Number(r.Number)===num);return r&&r[col]!==""?r[col]:""};
+  const cols=[["ev","Max exit velo (mph)","EV mph"],["ld","Line-drive %","LD %"],["sprint","30-yd sprint (sec)","30 yd s"],["broad","Broad jump (in)","Broad in"],["plank","Plank (sec)","Plank s"]];
+  return `<details class="panel" ${w.tests?"open":""}><summary><div class="panel-head" style="margin:0"><h3>Test results</h3><span class="count">${T.length} logged</span></div></summary>
+   <p class="hint" style="margin-top:10px">${w.tests?"Test night. ":""}Enter what you measured, then tap Save on that row. Blank boxes don't erase anything.</p>
+   <div class="scroll"><table class="data"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[2]}</th>`).join("")}<th></th></tr></thead><tbody>
+   ${list.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${cols.map(c=>`<td><input id="t-${w.id}-${p.n}-${c[0]}" inputmode="decimal" aria-label="${esc(p.f)} ${c[1]}" value="${esc(v(p.n,c[1]))}"></td>`).join("")}<td><button class="btn ghost" style="min-height:36px;padding:6px 10px" data-savetest="${p.n}">Save</button></td></tr>`).join("")}
+   </tbody></table></div></details>`;
+}
+function weekView(w,idx){
+  const unlocked=!!(D&&pin);
+  const R=roster(), present=unlocked?presentNums(w.id):new Set(), list=R.filter(p=>present.has(p.n)), n=list.length, m=modeFor(n);
+  const groups=n?buildGroups(list,m):[];
+  const nowM=(w.date===todayStr())?new Date().getHours()*60+new Date().getMinutes():-1;
+  const modeLabel=n===0?"Tap players as they arrive":m===3?"3 groups · 3 stations":m===2?"2 groups · 2 stations":"1 group · everyone together";
+  return `
+  <div class="hero"><div class="eyebrow">Week ${idx+1} · Friday ${w.label} · 6–8 pm</div><h2>${esc(w.theme)}</h2><p>${esc(w.focus)}</p>
+   <div class="cues"><span class="cue"><b>Cue of the night</b>${esc(w.cue)}</span><span class="cue blue"><b>Pitch cap</b>${esc(w.cap)}</span></div></div>
+  ${lockPanel()}
+  ${unlocked?`
+  <section class="panel"><div class="panel-head"><h3>Attendance</h3><div class="row"><span class="count">${n}/${R.length}</span><span class="mode">${modeLabel}</span></div></div>
+   <p class="hint">Tap a player when he walks in. Groups rebuild on their own and pitchers (marked in the Season tab) get spread across groups.</p>
+   <div class="roster">${R.map(p=>`<button class="chip" data-att="${p.n}" aria-pressed="${present.has(p.n)}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}${p.p?'<small>Pitcher</small>':''}</span></button>`).join("")}</div></section>
+  <section class="panel"><div class="panel-head"><h3>Tonight's groups</h3></div>
+   ${n?`<div class="groups">${groups.map((g,i)=>{const L="ABC"[i];const path=m===3?ROT[L].map(k=>STN[k].name).join(" → "):m===2?(i?"Defense → Pitch + hit":"Pitch + hit → Defense"):"All stations together";return `<div class="grp"><h4>Group ${L} <span class="count" style="font-size:12px;color:var(--muted)">${g.length}</span></h4><ul>${g.map(p=>`<li>#${p.n} ${esc(p.f)} ${esc(p.l[0]||"")}.${p.p?'<span class="tag">P</span>':''}</li>`).join("")}</ul><div class="path">${path}</div></div>`}).join("")}</div>`:`<p class="empty">No one checked in yet. Groups appear as you tap players in.</p>`}
+  </section>`:""}
+  <div class="timeline">${BLOCKS.map(b=>{const live=nowM>=toMin(b.s)&&nowM<toMin(b.e);return `<article class="blk${live?" now":""}"><div class="time">${fmt(b.s)}<small>–${fmt(b.e)}</small>${live?'<span class="live">NOW</span>':''}</div><div><h4>${b.name}</h4><div class="meta">${b.where} · ${b.lead}</div>${blockBody(b,w,n)}</div></article>`}).join("")}</div>
+  ${unlocked?penPanel(w,present)+testsPanel(w,present)+`
+  <section class="panel"><div class="panel-head"><h3>Coach notes</h3><span class="hint" style="margin:0" id="nsave"></span></div>
+   <textarea id="notes-${w.id}" placeholder="What worked, who needs what next week, anything to tell parents…">${esc(note(w.id))}</textarea></section>`:""}`;
+}
+function seasonView(){
+  const unlocked=!!(D&&pin);
+  const ref=`
+  <section class="panel"><div class="panel-head"><h3>Pitching scoreboard</h3></div>
+   <table class="ref"><thead><tr><th>Measure</th><th>Week 6 target</th></tr></thead><tbody>
+   <tr><td>Strike % (all pitches)</td><td>60%+</td></tr><tr><td>First-pitch strike %</td><td>60%+</td></tr><tr><td>Ahead after 3 pitches</td><td>2 of every 3 batters</td></tr><tr><td>Changeup strike %</td><td>50%+</td></tr><tr><td>Time between pitches</td><td>12 sec or less</td></tr></tbody></table>
+   <p class="hint" style="margin-top:10px">Arm safety: anyone sore, or who threw elsewhere this week, throws flat ground only. Elbow or front-of-shoulder pain ends his night and we tell the parents.</p></section>
+  <div class="two">
+   <section class="panel"><div class="panel-head"><h3>Five checkpoints</h3></div><p class="hint">Find the first one that breaks. Fix only that one.</p><ol class="tight">
+    <li><b>Balance at lift.</b> Tall, head over back foot. Balance-point holds.</li>
+    <li><b>Lead with the hip.</b> Front hip to the target first. Hip-lead walk-ins.</li>
+    <li><b>Stay closed.</b> Glove over the front foot. Rocker throws.</li>
+    <li><b>Firm landing.</b> Foot on line, front knee firms. Tape stride line.</li>
+    <li><b>Finish.</b> Chest over front knee. Towel drill.</li></ol></section>
+   <section class="panel"><div class="panel-head"><h3>Keep every kid busy</h3></div><ul class="tight">
+    <li>Never more than 2 in a line. Add a tee, net or fungo before anyone waits.</li>
+    <li>Every station keeps score: strikes, exit velo, clean reps.</li>
+    <li>One-minute whistle rotations. Water happens during the walk.</li>
+    <li>Non-throwers in the pen catch, chart, or do mechanics drills.</li>
+    <li>A captain runs hitting with the card so both coaches can coach.</li></ul></section>
+  </div>`;
+  const head=`<div class="hero"><div class="eyebrow">Oct 30 – Dec 4 · 6 Fridays</div><h2>Season progress</h2><p>Attendance, pitch-by-pitch progress, and Week 1 vs. latest test numbers, all pulled from the team sheet.</p></div>`;
+  if(!unlocked) return head+lockPanel()+ref;
+  const R=roster();
+  const att=R.map(p=>({p,wk:WEEKS.map(w=>presentNums(w.id).has(p.n))}));
+  const perWeek=WEEKS.map(w=>presentNums(w.id).size);
+  const pitchers=R.filter(p=>p.p||(D.bullpens||[]).some(b=>Number(b.Number)===p.n));
+  const penCell=(p,w)=>{const r=pens(w.id).find(r=>Number(r.Number)===p.n);return r?`${esc(r["Strike %"])}%`:"–"};
+  const fpsOf=p=>{const rs=(D.bullpens||[]).filter(r=>Number(r.Number)===p.n);const f=rs.reduce((a,r)=>a+Number(r["1st-pitch strikes"]||0),0),b=rs.reduce((a,r)=>a+Number(r["Batters faced"]||0),0);return b?Math.round(f/b*100)+"%":"–"};
+  const tcols=[["Max exit velo (mph)","EV",1],["Line-drive %","LD%",1],["30-yd sprint (sec)","30 yd",-1],["Broad jump (in)","Broad",1],["Plank (sec)","Plank",1]];
+  const testOf=(p,col)=>{const rs=(D.tests||[]).filter(r=>Number(r.Number)===p.n&&r[col]!=="").sort((a,b)=>a.Week.localeCompare(b.Week));if(!rs.length)return "–";
+    const first=Number(rs[0][col]),last=Number(rs[rs.length-1][col]);if(rs.length===1)return esc(first);
+    const dir=tcols.find(c=>c[0]===col)[2],d=+(last-first).toFixed(2),better=d*dir>0;
+    return `${esc(first)} → ${esc(last)} <span class="${d===0?"":better?"up":"down"}">${d>0?"+":""}${d}</span>`};
+  return head+`
+  <section class="panel"><div class="panel-head"><h3>Attendance</h3></div><div class="scroll"><table class="data"><thead><tr><th>Player</th>${WEEKS.map((w,i)=>`<th>Wk ${i+1}</th>`).join("")}<th>Total</th><th>Pitcher</th></tr></thead><tbody>
+   ${att.map(({p,wk})=>`<tr><td>#${p.n} ${esc(p.f)} ${esc(p.l)}</td>${wk.map(x=>`<td>${x?'<span class="dot" aria-label="present"></span>':'<span class="dot no" aria-label="absent"></span>'}</td>`).join("")}<td><b>${wk.filter(Boolean).length}</b></td><td><button class="ptog" data-ptog="${p.n}" aria-pressed="${p.p}">P</button></td></tr>`).join("")}
+   <tr><td><b>Players</b></td>${perWeek.map(n=>`<td><b>${n}</b></td>`).join("")}<td></td><td></td></tr></tbody></table></div>
+   <p class="hint" style="margin-top:10px">Tap P to mark who pitches. Weekly groups spread marked pitchers so Coach Justice gets arms every rotation.</p></section>
+  <section class="panel"><div class="panel-head"><h3>Strike % by week</h3></div>
+   ${pitchers.length?`<div class="scroll"><table class="data"><thead><tr><th>Pitcher</th>${WEEKS.map((w,i)=>`<th>Wk ${i+1}</th>`).join("")}<th>1st-pitch K</th></tr></thead><tbody>${pitchers.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${WEEKS.map(w=>`<td>${penCell(p,w)}</td>`).join("")}<td>${fpsOf(p)}</td></tr>`).join("")}</tbody></table></div>`:`<p class="empty">Mark pitchers above or save a bullpen to start the chart.</p>`}</section>
+  <section class="panel"><div class="panel-head"><h3>Tests: first → latest</h3></div>
+   <div class="scroll"><table class="data"><thead><tr><th>Player</th>${tcols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>${R.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${tcols.map(c=>`<td>${testOf(p,c[0])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+   <p class="hint" style="margin-top:10px">Green is better (faster sprint, more of everything else). The full log lives in the team Google Sheet.</p></section>`+ref;
+}
+function render(){
+  renderTabs();
+  const app=$("#app");
+  app.innerHTML=current==="season"?seasonView():weekView(WEEKS.find(w=>w.id===current),WEEKS.findIndex(w=>w.id===current));
+  updateSync();
+}
+function busy(){const a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT"||a.tagName==="SELECT")}
+function safeRender(){if(busy())return;render()}
+
+/* ---------- Events ---------- */
+document.addEventListener("submit",e=>{if(e.target.id==="pinform"){e.preventDefault();const v=$("#pin").value.trim();if(!v)return;pin=v;pinErr="";LS.set("ma_pin",v);load()}});
+document.addEventListener("click",e=>{
+  const w=WEEKS.find(x=>x.id===current);
+  const c=e.target.closest("[data-att]");
+  if(c&&w){const num=Number(c.dataset.att);const on=c.getAttribute("aria-pressed")!=="true";
+    // optimistic local change
+    const rows=D.attendance.filter(r=>!(r.Week===w.id&&Number(r.Number)===num));rows.push({Week:w.id,Date:w.date,Number:num,Present:on});D.attendance=rows;render();
+    send({action:"attendance",week:w.id,date:w.date,num,present:on});return}
+  const pt=e.target.closest("[data-ptog]");
+  if(pt){const num=Number(pt.dataset.ptog);const on=pt.getAttribute("aria-pressed")!=="true";
+    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,Pitcher:on}:r);render();send({action:"pitcher",num,pitcher:on});return}
+  const ty=e.target.closest("[data-type]");
+  if(ty){penType=ty.dataset.type;render();return}
+  const pp=e.target.closest("[data-pitch]");
+  if(pp&&w&&penPitcher){const log=getLog(w.id,penPitcher),k=pp.dataset.pitch;
+    const last=log[log.length-1];
+    if(k==="NB"){if(last&&!last.end)last.end="m"}
+    else{
+      const before=last&&!last.end?countStrikes(log):0;
+      const p={r:k==="B"?"B":"S",t:penType};if(last&&last.end)p.nb=true;
+      if(k==="F")p.f=1;
+      log.push(p);
+      const balls=stats(log).balls;
+      if(k==="IP"||(k==="S"&&before>=2)||(k==="B"&&balls>=4)) p.end="a";
+    }
+    setLog(w.id,penPitcher,log);render();return}
+  if(e.target.id==="penundo"&&w){const log=getLog(w.id,penPitcher),last=log[log.length-1];
+    if(last&&last.end==="m")delete last.end;else log.pop();
+    setLog(w.id,penPitcher,log);render();return}
+  if(e.target.id==="penclear"&&w){if(e.target.dataset.confirm!=="1"){e.target.dataset.confirm="1";e.target.textContent="Tap again to clear";return}setLog(w.id,penPitcher,[]);render();return}
+  if(e.target.id==="pensave"&&w){const log=getLog(w.id,penPitcher),s=stats(log);
+    e.target.disabled=true;e.target.textContent="Saving…";
+    send({action:"bullpen",week:w.id,date:w.date,num:Number(penPitcher),pitches:s.pitches,strikes:s.strikes,batters:s.batters,fps:s.fps,ahead:s.ahead,ch:s.ch,chStrikes:s.chS,cue:($("#pencue")||{}).value||""}).then(ok=>{if(ok)toast("Pen saved to the team sheet");else render()});return}
+  const ts=e.target.closest("[data-savetest]");
+  if(ts&&w){const num=ts.dataset.savetest,g=k=>{const el=document.getElementById(`t-${w.id}-${num}-${k}`);const v=el?el.value.trim():"";return v===""?"":Number(v)};
+    const body={action:"test",week:w.id,date:w.date,num:Number(num),ev:g("ev"),ld:g("ld"),sprint:g("sprint"),broad:g("broad"),plank:g("plank")};
+    if([body.ev,body.ld,body.sprint,body.broad,body.plank].some(v=>v!==""&&isNaN(v))){toast("Numbers only in test boxes");return}
+    ts.textContent="Saving…";ts.disabled=true;send(body).then(ok=>{if(ok)toast("Saved #"+num+"'s numbers")});return}
+});
+// strikes so far in the current at-bat
+function countStrikes(log){let k=0;for(let i=log.length-1;i>=0;i--){k+=log[i].r==="S"?1:0;if(i===0||log[i].nb)break}return k}
+document.addEventListener("change",e=>{if(e.target.id==="penwho"){penPitcher=e.target.value;LS.set("ma_pen_pitcher",penPitcher);e.target.blur();render()}});
+let nTimer=null;
+function saveNote(wid,txt){const w=WEEKS.find(x=>x.id===wid);const s=$("#nsave");if(s)s.textContent="Saving…";
+  send({action:"note",week:wid,date:w.date,text:txt}).then(ok=>{const s=$("#nsave");if(s)s.textContent=ok?"Saved":"Not saved"})}
+document.addEventListener("input",e=>{if(e.target.id&&e.target.id.startsWith("notes-")){const wid=e.target.id.slice(6),v=e.target.value;const s=$("#nsave");if(s)s.textContent="Typing…";clearTimeout(nTimer);nTimer=setTimeout(()=>saveNote(wid,v),1500)}});
+document.addEventListener("focusout",e=>{if(e.target.id&&e.target.id.startsWith("notes-")){clearTimeout(nTimer);const wid=e.target.id.slice(6);if(e.target.value!==note(wid))saveNote(wid,e.target.value)}});
+
+window.addEventListener("hashchange",route);
+route();
+load();
+// keep both coaches in sync
+setInterval(()=>{if(document.visibilityState==="visible")load(true)},20000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")load(true)});
+setInterval(()=>{const w=WEEKS.find(x=>x.id===current);if(w&&w.date===todayStr())safeRender()},30000);
+</script>
+</body>
+</html>
