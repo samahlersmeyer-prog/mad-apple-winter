@@ -158,6 +158,28 @@ table.ref th{font-family:var(--mono);font-size:11px;color:var(--muted);text-tran
 .err{color:var(--apple);font-size:13px;font-weight:600;margin:8px 0 0}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14202e;color:#f3f5f7;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
 
+/* Boards */
+.boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 12px}
+.boards .panel{margin-top:12px}
+h3.sect{font-family:var(--display);font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:24px 0 0}
+ol.lb{list-style:none;margin:0;padding:0}
+ol.lb li{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+ol.lb li:last-child{border-bottom:0}
+ol.lb .rk{font-family:var(--display);font-weight:800;font-size:18px;text-align:center;border-radius:6px;line-height:26px;color:var(--muted)}
+ol.lb li.r1 .rk{background:var(--apple);color:#fff}
+ol.lb li.r2 .rk,ol.lb li.r3 .rk{background:var(--apple-soft);color:var(--apple)}
+ol.lb a{color:var(--ink);text-decoration:none;font-weight:700;min-width:0}
+ol.lb a small{font-weight:500;color:var(--muted);margin-left:6px;font-family:var(--mono);font-size:11px}
+ol.lb b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14px}
+ol.lb li.r1 b{color:var(--apple)}
+.prs{border-color:var(--turf)}
+.prlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.prlist li{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;background:var(--turf-soft);border-radius:8px;padding:8px 10px}
+.prlist a{color:var(--ink);font-weight:700;text-decoration:none}
+.prlist span{color:var(--muted);font-size:13px}
+.prlist b{color:var(--turf);font-family:var(--mono)}
+.prlist small{color:var(--muted);font-size:12px}
+.ptog:disabled{cursor:default;opacity:.8}
 /* Team tab */
 .subnav{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .subnav a{text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;padding:8px 14px;border-radius:99px;border:1.5px solid var(--line)}
@@ -306,11 +328,15 @@ async function load(silent){
   try{
     const r=await fetch(URL_+"?pin="+encodeURIComponent(pin)+"&t="+Date.now());
     const j=await r.json();
-    if(!j.ok){ if(j.error==="pin"){pinErr="That PIN didn't work. Check with Coach Sam.";pin="";LS.del("ma_pin");D=null} }
-    else { if(!pending){D=j;lastSync=new Date();pinErr=""} }
+    if(!j.ok){ if(j.error==="pin"){pinErr="That code didn't work. Check with Coach Sam.";pin="";LS.del("ma_pin");D=null} }
+    else { if(!pending){D=shape(j);lastSync=new Date();pinErr=""} }
   }catch(e){ if(!silent) toast("Couldn't reach the team sheet. Check your connection.") }
   loading=false; safeRender();
 }
+const ERR={pin:"Code rejected. Sign in again.",coach_only:"Only coaches can change that.",exists:"Already saved this week. A coach can change it.",bad_sheet:"That save didn't have a home in the sheet."};
+function shape(j){const d=j.data||{};return {role:j.role||"coach",roster:d.roster||[],attendance:d.attendance||[],bullpens:d.bullpens||[],tests:d.tests||[],notes:d.notes||[]}}
+const isCoach=()=>!!(D&&D.role==="coach");
+function save(sheet,keys,rec,mode){return send({action:"save",sheet,keys,rec,mode:mode||"merge"})}
 let chain=Promise.resolve();
 function send(body){
   pending++; updateSync();
@@ -319,19 +345,20 @@ function send(body){
       const r=await fetch(URL_,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,pin})});
       const j=await r.json();
       pending--;
-      if(!j.ok){toast(j.error==="pin"?"PIN rejected. Sign in again.":"The sheet refused that save.");return false}
-      if(!pending){D=j;lastSync=new Date();safeRender()}
+      if(j.data&&!pending){D=shape(j);lastSync=new Date()}
+      if(!j.ok){toast(ERR[j.error]||"The sheet refused that save.");safeRender();return false}
+      if(!pending){safeRender()}
       return true;
     }catch(e){pending--;toast("Didn't save. Check your connection and try again.");updateSync();return false}
   });
   return chain;
 }
 function updateSync(){const s=$("#sync");if(!s)return;
-  s.textContent=!URL_?"not connected":!pin?"locked":pending?"saving…":lastSync?"synced "+lastSync.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"";}
+  s.textContent=!URL_?"not connected":!pin?"locked":pending?"saving…":lastSync?(D&&D.role==="player"?"player · ":"coach · ")+lastSync.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"";}
 
 /* ---------- Routing ---------- */
 function defaultTab(){const t=todayStr();const w=WEEKS.find(w=>w.date>=t);return w?w.id:"w6"}
-function route(){const h=location.hash.slice(1);current=(h==="season"||h==="team"||h==="field"||h==="bullpen"||/^player-\d+$/.test(h)||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
+function route(){const h=location.hash.slice(1);current=(h==="season"||h==="boards"||h==="team"||h==="field"||h==="bullpen"||/^player-\d+$/.test(h)||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
 const isTeam=()=>current==="team"||current==="field"||current==="bullpen"||/^player-/.test(current);
 
 /* ---------- Views ---------- */
@@ -339,6 +366,7 @@ function renderTabs(){
   const t=$("#tabs");
   t.innerHTML=WEEKS.map((w,i)=>`<a href="#${w.id}" ${current===w.id?'aria-current="page"':""}>Wk ${i+1}<small>${w.label}</small></a>`).join("")+
    `<a href="#team" ${isTeam()?'aria-current="page"':""}>Team<small>Roster</small></a>`+
+   `<a href="#boards" ${current==="boards"?'aria-current="page"':""}>Boards<small>Leaders</small></a>`+
    `<a href="#season" ${current==="season"?'aria-current="page"':""}>Season<small>Progress</small></a>`;
   const a=t.querySelector('[aria-current]'); if(a) a.scrollIntoView({block:"nearest",inline:"center"});
 }
@@ -346,9 +374,9 @@ function lockPanel(){
   if(!URL_) return `<section class="panel lock"><h3>Not connected yet</h3><p class="hint" style="margin-top:8px">The practice plan works below. Attendance and stats turn on once the team sheet's web address is added to config.js.</p></section>`;
   if(pin&&D) return "";
   if(pin&&!D) return `<section class="panel"><p class="empty">${loading?"Loading the team sheet…":"Connecting…"}</p></section>`;
-  return `<section class="panel lock"><div class="panel-head"><h3>Coach sign-in</h3></div>
-   <p class="hint">Enter the team PIN to see the roster, take attendance and log numbers. The plan below is open to everyone.</p>
-   <form id="pinform"><input id="pin" type="password" inputmode="text" autocomplete="current-password" placeholder="Team PIN" aria-label="Team PIN"><button class="btn" type="submit">Unlock</button></form>
+  return `<section class="panel lock"><div class="panel-head"><h3>Sign in</h3></div>
+   <p class="hint">Players: enter the team code to see the leaderboards and help log numbers. Coaches: use the coach PIN. The practice plan is open to everyone.</p>
+   <form id="pinform"><input id="pin" type="password" inputmode="text" autocomplete="current-password" placeholder="Team code or coach PIN" aria-label="Team code or coach PIN"><button class="btn" type="submit">Unlock</button></form>
    ${pinErr?`<p class="err">${esc(pinErr)}</p>`:""}</section>`;
 }
 function stationCard(key,w){const s=STN[key],d=w[key];return `<div class="st ${s.c}"><h5>${s.name}</h5><strong>${esc(d.t)}</strong><div class="meta">${s.lead}</div><ul>${d.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
@@ -398,7 +426,7 @@ function penPanel(w,present){
   const trail=batters(log).map((b,i)=>(i?'<span class="sep">|</span>':"")+b.map(p=>`<span class="${p.r==="S"?"s":"bl"}">${p.f?"F":p.r==="S"?"K":"B"}${p.t==="CH"?"c":""}</span>`).join("")).join("");
   const capHit=w.capN&&s.pitches>=w.capN;
   return `<section class="panel" id="pen"><div class="panel-head"><h3>Bullpen charter</h3><span class="count">${w.capN?"Cap "+w.capN:"Flat ground week"}</span></div>
-  <p class="hint">A non-pitcher charts on a coach's phone. Tap every pitch. Walks, strikeouts and balls in play start the next batter on their own; tap <b>New batter</b> for anything else. Fouls count as strikes.</p>
+  <p class="hint">${isCoach()?"A non-pitcher charts on a coach's phone.":"Charting for a teammate? Pick him, tap every pitch, then Save. If a coach already saved his pen this week, theirs stays."} Tap every pitch. Walks, strikeouts and balls in play start the next batter on their own; tap <b>New batter</b> for anything else. Fouls count as strikes.</p>
   <div class="pen-top"><label for="penwho">Pitcher<select id="penwho">${pitchersHere.length?`<optgroup label="Pitchers here tonight">${pitchersHere.map(opt).join("")}</optgroup>`:""}<optgroup label="${pitchersHere.length?"Everyone else":"Roster"}">${others.map(opt).join("")}</optgroup></select></label>
    <div class="seg" role="group" aria-label="Pitch type"><button data-type="FB" aria-pressed="${penType==="FB"}">FB</button><button data-type="CH" aria-pressed="${penType==="CH"}">CH</button></div></div>
   <div class="scoreboard">
@@ -433,7 +461,7 @@ function testsPanel(w,present){
    <div class="stopwatch"><div><label class="hint" for="swwho" style="margin:0 0 4px;display:block">Runner</label><select id="swwho">${list.map(p=>`<option value="${p.n}" ${String(p.n)===sw.who?"selected":""}>#${p.n} ${esc(p.f)} ${esc(p.l)}</option>`).join("")}</select>
     <div class="sw-time" id="sw-time" style="margin-top:8px">${swText()}</div></div>
     <button class="sw-btn ${sw.running?"run":""}" id="swbtn">${sw.running?"Stop":"Start"}</button></div>
-   <p class="hint">Enter what you measured, then tap Save on that row. Blank boxes don't erase anything.</p>
+   <p class="hint">${isCoach()?"Enter what you measured, then tap Save on that row. Blank boxes don't erase anything.":"Fill in empty boxes and tap Save. Numbers already logged stay put; tell a coach if one is wrong."}</p>
    <div class="scroll"><table class="data"><thead><tr><th>Player</th>${TCOLS.map(c=>`<th>${c[2]}</th>`).join("")}<th></th></tr></thead><tbody>
    ${list.map(p=>`<tr><td><a href="#player-${p.n}" style="color:inherit">#${p.n} ${esc(p.f)}</a></td>${TCOLS.map(c=>{const d=draft(w.id,p.n,c[0]);return `<td><input id="t-${w.id}-${p.n}-${c[0]}" data-draft="${w.id}|${p.n}|${c[0]}" inputmode="decimal" aria-label="${esc(p.f)} ${c[1]}" value="${esc(d!=null?d:v(p.n,c[1]))}"></td>`}).join("")}<td><button class="btn ghost" style="min-height:36px;padding:6px 10px" data-savetest="${p.n}">Save</button></td></tr>`).join("")}
    </tbody></table></div></details>`;
@@ -449,16 +477,16 @@ function weekView(w,idx){
    <div class="cues"><span class="cue"><b>Cue of the night</b>${esc(w.cue)}</span><span class="cue blue"><b>Pitch cap</b>${esc(w.cap)}</span></div></div>
   ${lockPanel()}
   ${unlocked?`
-  <section class="panel"><div class="panel-head"><h3>Attendance</h3><div class="row"><span class="count">${n}/${R.length}</span><span class="mode">${modeLabel}</span></div></div>
-   <p class="hint">Tap a player when he walks in. Groups rebuild on their own and pitchers (marked in the Season tab) get spread across groups.</p>
-   <div class="roster">${R.map(p=>`<button class="chip" data-att="${p.n}" aria-pressed="${present.has(p.n)}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}${p.p?'<small>Pitcher</small>':''}</span></button>`).join("")}</div></section>
+  ${isCoach()?`<section class="panel"><div class="panel-head"><h3>Attendance</h3><div class="row"><span class="count">${n}/${R.length}</span><span class="mode">${modeLabel}</span></div></div>
+   <p class="hint">Tap a player when he walks in. Groups rebuild on their own and pitchers get spread across groups.</p>
+   <div class="roster">${R.map(p=>`<button class="chip" data-att="${p.n}" aria-pressed="${present.has(p.n)}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}${p.p?'<small>Pitcher</small>':''}</span></button>`).join("")}</div></section>`:""}
   <section class="panel"><div class="panel-head"><h3>Tonight's groups</h3></div>
    ${n?`<div class="groups">${groups.map((g,i)=>{const L="ABC"[i];const path=m===3?ROT[L].map(k=>STN[k].name).join(" → "):m===2?(i?"Defense → Pitch + hit":"Pitch + hit → Defense"):"All stations together";return `<div class="grp"><h4>Group ${L} <span class="count" style="font-size:12px;color:var(--muted)">${g.length}</span></h4><ul>${g.map(p=>`<li>#${p.n} ${esc(p.f)} ${esc(p.l[0]||"")}.${p.p?'<span class="tag">P</span>':''}</li>`).join("")}</ul><div class="path">${path}</div></div>`}).join("")}</div>`:`<p class="empty">No one checked in yet. Groups appear as you tap players in.</p>`}
   </section>`:""}
   <div class="timeline">${BLOCKS.map(b=>{const live=nowM>=toMin(b.s)&&nowM<toMin(b.e);return `<article class="blk${live?" now":""}"><div class="time">${fmt(b.s)}<small>–${fmt(b.e)}</small>${live?'<span class="live">NOW</span>':''}</div><div><h4>${b.name}</h4><div class="meta">${b.where} · ${b.lead}</div>${blockBody(b,w,n)}</div></article>`}).join("")}</div>
-  ${unlocked?penPanel(w,present)+testsPanel(w,present)+`
+  ${unlocked?penPanel(w,present)+testsPanel(w,present)+(isCoach()?`
   <section class="panel"><div class="panel-head"><h3>Coach notes</h3><span class="hint" style="margin:0" id="nsave"></span></div>
-   <textarea id="notes-${w.id}" placeholder="What worked, who needs what next week, anything to tell parents…">${esc(note(w.id))}</textarea></section>`:""}`;
+   <textarea id="notes-${w.id}" placeholder="What worked, who needs what next week, anything to tell parents…">${esc(note(w.id))}</textarea></section>`:""):""}`;
 }
 function seasonView(){
   const unlocked=!!(D&&pin);
@@ -496,7 +524,7 @@ function seasonView(){
     return `${esc(first)} → ${esc(last)} <span class="${d===0?"":better?"up":"down"}">${d>0?"+":""}${d}</span>`};
   return head+`
   <section class="panel"><div class="panel-head"><h3>Attendance</h3></div><div class="scroll"><table class="data"><thead><tr><th>Player</th>${WEEKS.map((w,i)=>`<th>Wk ${i+1}</th>`).join("")}<th>Total</th><th>Pitcher</th></tr></thead><tbody>
-   ${att.map(({p,wk})=>`<tr><td>#${p.n} ${esc(p.f)} ${esc(p.l)}</td>${wk.map(x=>`<td>${x?'<span class="dot" aria-label="present"></span>':'<span class="dot no" aria-label="absent"></span>'}</td>`).join("")}<td><b>${wk.filter(Boolean).length}</b></td><td><button class="ptog" data-ptog="${p.n}" aria-pressed="${p.p}">P</button></td></tr>`).join("")}
+   ${att.map(({p,wk})=>`<tr><td>#${p.n} ${esc(p.f)} ${esc(p.l)}</td>${wk.map(x=>`<td>${x?'<span class="dot" aria-label="present"></span>':'<span class="dot no" aria-label="absent"></span>'}</td>`).join("")}<td><b>${wk.filter(Boolean).length}</b></td><td><button class="ptog" data-ptog="${p.n}" aria-pressed="${p.p}" ${isCoach()?"":"disabled"}>P</button></td></tr>`).join("")}
    <tr><td><b>Players</b></td>${perWeek.map(n=>`<td><b>${n}</b></td>`).join("")}<td></td><td></td></tr></tbody></table></div>
    <p class="hint" style="margin-top:10px">Tap P to mark who pitches. Weekly groups spread marked pitchers so Coach Justice gets arms every rotation.</p></section>
   <section class="panel"><div class="panel-head"><h3>Strike % by week</h3></div>
@@ -586,14 +614,64 @@ function playerView(n){
    <div class="scroll"><table class="data"><thead><tr><th>Week</th><th>Here</th><th>Pitches</th><th>K%</th><th>1st K</th><th>EV</th><th>LD%</th><th>30 yd</th><th>H→1</th><th>Broad</th><th>Plank</th></tr></thead><tbody>${rows.map(r=>`<tr>${r.cells}</tr>`).join("")}</tbody></table></div>
    ${cues.length?`<p class="hint" style="margin-top:12px"><b>Pitching cues:</b> ${cues.map(r=>`Wk ${weekIdx(r.Week)+1}: ${esc(r.Cue)}`).join(" · ")}</p>`:""}
    <p class="hint" style="margin-top:8px">Fills in automatically every Friday from attendance, the bullpen charter and test results.</p></section>
-  <section class="panel"><div class="panel-head"><h3>Positions</h3></div>
+  ${isCoach()?`<section class="panel"><div class="panel-head"><h3>Positions</h3></div>
    <div class="edit">${sel("ed-pos1",POS,pd("pos1",p),"Primary")}${sel("ed-pos2",POS,pd("pos2",p),"Secondary")}${sel("ed-bats",["R","L","S"],pd("bats",p),"Bats")}${sel("ed-throws",["R","L"],pd("throws",p),"Throws")}</div>
-   <div class="row" style="margin-top:12px"><button class="btn" id="psave" data-num="${p.n}">Save</button><span class="hint" style="margin:0">Choosing P puts him in the bullpen and spreads him across groups.</span></div></section>`;
+   <div class="row" style="margin-top:12px"><button class="btn" id="psave" data-num="${p.n}">Save</button><span class="hint" style="margin:0">Choosing P puts him in the bullpen and spreads him across groups.</span></div></section>`:""}`;
+}
+const METRICS=[
+ {col:"Max exit velo (mph)",name:"Exit velo",unit:"mph",dir:1},
+ {col:"Home to 1st (sec)",name:"Home to 1st",unit:"s",dir:-1},
+ {col:"30-yd sprint (sec)",name:"30-yd sprint",unit:"s",dir:-1},
+ {col:"Broad jump (in)",name:"Broad jump",unit:"in",dir:1},
+ {col:"Plank (sec)",name:"Plank",unit:"s",dir:1},
+ {col:"Line-drive %",name:"Line drives",unit:"%",dir:1}];
+const better=(a,b,dir)=>dir>0?a>b:a<b;
+function series(n,col){return (D.tests||[]).filter(r=>Number(r.Number)===n&&num(r[col])!=null).map(r=>({w:weekIdx(r.Week),v:num(r[col])})).filter(x=>x.w>=0).sort((a,b)=>a.w-b.w)}
+function ranked(items,dir){ // items: [{p,v,label}] -> sorted with shared ranks, top 5 (ties at 5th kept)
+  items.sort((a,b)=>dir>0?b.v-a.v:a.v-b.v);let rank=0,prev=null;
+  items.forEach((it,i)=>{if(prev===null||it.v!==prev){rank=i+1;prev=it.v}it.rank=rank});
+  return items.filter(it=>it.rank<=5);
+}
+function boardCard(title,sub,items,fmtv){
+  return `<section class="panel board"><div class="panel-head"><h3>${title}</h3><span class="hint" style="margin:0">${sub}</span></div>
+   ${items.length?`<ol class="lb">${items.map(it=>`<li class="r${Math.min(it.rank,4)}"><span class="rk">${it.rank}</span><a href="#player-${it.p.n}">${esc(it.p.f)} ${esc(it.p.l[0]||"")}.<small>#${it.p.n}</small></a><b>${fmtv(it)}</b></li>`).join("")}</ol>`:`<p class="empty">No numbers yet. Log some on a Friday tab.</p>`}</section>`;
+}
+function boardsView(){
+  const head=`<div class="hero"><div class="eyebrow">Mad Apple · winter 2026</div><h2>Leaderboards</h2><p>Top five in every test, plus the biggest jumps since your first try. Everybody can win the improvement boards.</p></div>`;
+  if(!(D&&pin)) return head+lockPanel();
+  const R=roster(), out=[];
+  // PRs from the most recent week with any test data
+  const weeksWithData=[...new Set((D.tests||[]).map(r=>weekIdx(r.Week)).filter(i=>i>=0))].sort((a,b)=>b-a);
+  const lw=weeksWithData[0];
+  if(lw!=null){
+    const prs=[];
+    R.forEach(p=>METRICS.forEach(m=>{const s=series(p.n,m.col),now=s.find(x=>x.w===lw),before=s.filter(x=>x.w<lw);
+      if(now&&before.length&&before.every(x=>better(now.v,x.v,m.dir))) prs.push({p,m,v:now.v,prev:before.reduce((a,x)=>better(x.v,a,m.dir)?x.v:a,before[0].v)})}));
+    out.push(`<section class="panel prs"><div class="panel-head"><h3>New personal records</h3><span class="hint" style="margin:0">Week ${lw+1} · ${WEEKS[lw].label}</span></div>
+     ${prs.length?`<ul class="prlist">${prs.map(x=>`<li><a href="#player-${x.p.n}">${esc(x.p.f)} ${esc(x.p.l[0]||"")}.</a> <span>${x.m.name}</span> <b>${x.v} ${x.m.unit}</b> <small>was ${x.prev}</small></li>`).join("")}</ul>`:`<p class="empty">No new PRs yet this week. First tries set the baseline; the next one can beat it.</p>`}</section>`);
+  }
+  const grid=[];
+  METRICS.forEach(m=>{
+    const best=R.map(p=>{const s=series(p.n,m.col);if(!s.length)return null;return {p,v:s.reduce((a,x)=>better(x.v,a,m.dir)?x.v:a,s[0].v)}}).filter(Boolean);
+    grid.push(boardCard(m.name,`best ${m.unit==="%"?"%":m.unit}`,ranked(best,m.dir),it=>`${it.v}${m.unit==="%"?"%":" "+m.unit}`));
+    const imp=R.map(p=>{const s=series(p.n,m.col);if(s.length<2)return null;const b=s.slice(1).reduce((a,x)=>better(x.v,a,m.dir)?x.v:a,s[1].v);const d=+((b-s[0].v)*m.dir).toFixed(2);return d>0?{p,v:d}:null}).filter(Boolean);
+    grid.push(boardCard(m.name+": most improved",`vs. first try`,ranked(imp,1),it=>`+${it.v}${m.unit==="%"?"%":" "+m.unit}`));
+  });
+  // pitching
+  const ps=R.map(p=>({p,s:pitcherSeason(p.n)})).filter(x=>x.s.pitches>0);
+  const kp=ranked(ps.filter(x=>x.s.pitches>=20).map(x=>({p:x.p,v:pct(x.s.strikes,x.s.pitches)})),1);
+  const fp=ranked(ps.filter(x=>x.s.batters>=8).map(x=>({p:x.p,v:pct(x.s.fps,x.s.batters)})),1);
+  const ki=ranked(ps.filter(x=>x.s.rs.length>=2).map(x=>{const a=num(x.s.rs[0]["Strike %"]),b=num(x.s.rs[x.s.rs.length-1]["Strike %"]);return a!=null&&b!=null&&b>a?{p:x.p,v:b-a}:null}).filter(Boolean),1);
+  const att=ranked(R.map(p=>({p,v:WEEKS.filter(w=>presentNums(w.id).has(p.n)).length})).filter(x=>x.v>0),1);
+  return head+out.join("")+`<h3 class="sect">Pitching</h3><div class="boards">${boardCard("Strike %","season · 20+ pitches",kp,it=>it.v+"%")}${boardCard("First-pitch strikes","season · 8+ batters",fp,it=>it.v+"%")}${boardCard("Strike %: most improved","first pen vs. latest",ki,it=>"+"+it.v+"%")}</div>
+   <h3 class="sect">Tests</h3><div class="boards">${grid.join("")}</div>
+   <h3 class="sect">Showing up</h3><div class="boards">${boardCard("Iron man","Fridays attended",att,it=>it.v+" of "+WEEKS.length)}</div>`;
 }
 function render(){
   renderTabs();
   const app=$("#app");
-  app.innerHTML=current==="season"?seasonView():isTeam()?teamView():weekView(WEEKS.find(w=>w.id===current),WEEKS.findIndex(w=>w.id===current));
+  app.innerHTML=current==="season"?seasonView():current==="boards"?boardsView():isTeam()?teamView():weekView(WEEKS.find(w=>w.id===current),WEEKS.findIndex(w=>w.id===current));
+  if(D&&pin) app.insertAdjacentHTML("beforeend",`<p class="hint" style="margin-top:28px;text-align:center">Signed in as ${D.role==="player"?"a player":"a coach"} · <button class="btn ghost" id="signout" style="min-height:32px;padding:4px 10px;font-size:13px">Sign out</button></p>`);
   updateSync();
 }
 function busy(){const a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT"||a.tagName==="SELECT")}
@@ -607,10 +685,10 @@ document.addEventListener("click",e=>{
   if(c&&w){const num=Number(c.dataset.att);const on=c.getAttribute("aria-pressed")!=="true";
     // optimistic local change
     const rows=D.attendance.filter(r=>!(r.Week===w.id&&Number(r.Number)===num));rows.push({Week:w.id,Date:w.date,Number:num,Present:on});D.attendance=rows;render();
-    send({action:"attendance",week:w.id,date:w.date,num,present:on});return}
+    save("Attendance",["Week","Number"],{Week:w.id,Date:w.date,Number:num,Present:on},"overwrite");return}
   const pt=e.target.closest("[data-ptog]");
   if(pt){const num=Number(pt.dataset.ptog);const on=pt.getAttribute("aria-pressed")!=="true";
-    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,Pitcher:on}:r);render();send({action:"pitcher",num,pitcher:on});return}
+    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,Pitcher:on}:r);render();save("Roster",["Number"],{Number:num,Pitcher:on},"overwrite");return}
   const ty=e.target.closest("[data-type]");
   if(ty){penType=ty.dataset.type;render();return}
   const pp=e.target.closest("[data-pitch]");
@@ -632,14 +710,15 @@ document.addEventListener("click",e=>{
   if(e.target.id==="penclear"&&w){if(e.target.dataset.confirm!=="1"){e.target.dataset.confirm="1";e.target.textContent="Tap again to clear";return}setLog(w.id,penPitcher,[]);render();return}
   if(e.target.id==="pensave"&&w){const log=getLog(w.id,penPitcher),s=stats(log);
     e.target.disabled=true;e.target.textContent="Saving…";
-    send({action:"bullpen",week:w.id,date:w.date,num:Number(penPitcher),pitches:s.pitches,strikes:s.strikes,batters:s.batters,fps:s.fps,ahead:s.ahead,ch:s.ch,chStrikes:s.chS,cue:($("#pencue")||{}).value||""}).then(ok=>{if(ok)toast("Pen saved to the team sheet");else render()});return}
+    save("Bullpens",["Week","Number"],{Week:w.id,Date:w.date,Number:Number(penPitcher),Pitches:s.pitches,Strikes:s.strikes,"Strike %":pct(s.strikes,s.pitches),"Batters faced":s.batters,"1st-pitch strikes":s.fps,"Ahead after 3":s.ahead,Changeups:s.ch,"CH strikes":s.chS,Cue:($("#pencue")||{}).value||""},"overwrite").then(ok=>{if(ok)toast("Pen saved to the team sheet");else render()});return}
   const ts=e.target.closest("[data-savetest]");
   if(ts&&w){const num=ts.dataset.savetest,g=k=>{const el=document.getElementById(`t-${w.id}-${num}-${k}`);const v=el?el.value.trim():"";return v===""?"":Number(v)};
-    const body={action:"test",week:w.id,date:w.date,num:Number(num),ev:g("ev"),ld:g("ld"),sprint:g("sprint"),broad:g("broad"),plank:g("plank"),h1:g("h1")};
-    if([body.ev,body.ld,body.sprint,body.broad,body.plank,body.h1].some(v=>v!==""&&isNaN(v))){toast("Numbers only in test boxes");return}
-    ts.textContent="Saving…";ts.disabled=true;send(body).then(ok=>{if(ok){if(drafts[w.id])delete drafts[w.id][num];toast("Saved #"+num+"'s numbers")}else render()});return}
+    const rec={Week:w.id,Date:w.date,Number:Number(num)};TCOLS.forEach(c=>rec[c[1]]=g(c[0]));
+    if(TCOLS.some(c=>rec[c[1]]!==""&&isNaN(rec[c[1]]))){toast("Numbers only in test boxes");return}
+    ts.textContent="Saving…";ts.disabled=true;save("Tests",["Week","Number"],rec,"merge").then(ok=>{if(ok){if(drafts[w.id])delete drafts[w.id][num];toast("Saved #"+num+"'s numbers")}else render()});return}
 });
 document.addEventListener("click",e=>{
+  if(e.target.id==="signout"){pin="";D=null;LS.del("ma_pin");render();return}
   if(e.target.id==="swbtn"){const w=WEEKS.find(x=>x.id===current);if(!w)return;
     if(!sw.running){sw.running=true;sw.start=performance.now();sw.elapsed=0;e.target.textContent="Stop";e.target.classList.add("run");tickSW()}
     else{sw.running=false;sw.elapsed=performance.now()-sw.start;const t=(sw.elapsed/1000).toFixed(2);
@@ -648,10 +727,11 @@ document.addEventListener("click",e=>{
     return}
   if(e.target.id==="psave"){const num=Number(e.target.dataset.num),g=id=>(document.getElementById(id)||{}).value||"";
     const R=roster(),me=R.find(p=>p.n===num)||{};
-    const body={action:"player",num,pos1:g("ed-pos1"),pos2:g("ed-pos2"),bats:g("ed-bats"),throws:g("ed-throws"),pitcher:me.p&&me.pos1!=="P"&&me.pos2!=="P"?true:false};
-    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,Primary:body.pos1,Secondary:body.pos2,Bats:body.bats,Throws:body.throws}:r);
+    const rec={Number:num,Primary:g("ed-pos1"),Secondary:g("ed-pos2"),Bats:g("ed-bats"),Throws:g("ed-throws")};
+    rec.Pitcher=rec.Primary==="P"||rec.Secondary==="P"||(me.p&&me.pos1!=="P"&&me.pos2!=="P");
+    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,...rec}:r);
     e.target.textContent="Saving…";e.target.disabled=true;
-    send(body).then(ok=>{if(ok)delete pdraft[num];toast(ok?"Saved":"Didn't save");render()});return}
+    save("Roster",["Number"],rec,"overwrite").then(ok=>{if(ok)delete pdraft[num];toast(ok?"Saved":"Didn't save");render()});return}
 });
 document.addEventListener("change",e=>{const m=/^ed-(pos1|pos2|bats|throws)$/.exec(e.target.id||"");if(m){const n=Number(current.slice(7));pdraft[n]=pdraft[n]||{};pdraft[n][m[1]]=e.target.value}});
 document.addEventListener("change",e=>{if(e.target.id==="swwho"){sw.who=e.target.value;sw.elapsed=0;e.target.blur();const t=document.getElementById("sw-time");if(t)t.textContent="0.00"}});
@@ -661,7 +741,7 @@ function countStrikes(log){let k=0;for(let i=log.length-1;i>=0;i--){k+=log[i].r=
 document.addEventListener("change",e=>{if(e.target.id==="penwho"){penPitcher=e.target.value;LS.set("ma_pen_pitcher",penPitcher);e.target.blur();render()}});
 let nTimer=null;
 function saveNote(wid,txt){const w=WEEKS.find(x=>x.id===wid);const s=$("#nsave");if(s)s.textContent="Saving…";
-  send({action:"note",week:wid,date:w.date,text:txt}).then(ok=>{const s=$("#nsave");if(s)s.textContent=ok?"Saved":"Not saved"})}
+  save("Notes",["Week"],{Week:wid,Date:w.date,Notes:txt},"overwrite").then(ok=>{const s=$("#nsave");if(s)s.textContent=ok?"Saved":"Not saved"})}
 document.addEventListener("input",e=>{if(e.target.id&&e.target.id.startsWith("notes-")){const wid=e.target.id.slice(6),v=e.target.value;const s=$("#nsave");if(s)s.textContent="Typing…";clearTimeout(nTimer);nTimer=setTimeout(()=>saveNote(wid,v),1500)}});
 document.addEventListener("focusout",e=>{if(e.target.id&&e.target.id.startsWith("notes-")){clearTimeout(nTimer);const wid=e.target.id.slice(6);if(e.target.value!==note(wid))saveNote(wid,e.target.value)}});
 

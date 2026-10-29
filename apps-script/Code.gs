@@ -1,171 +1,174 @@
 /**
- * Mad Apple Winter Workouts — Google Sheet backend
+ * Mad Apple Winter Workouts — Google Sheet backend (v2, general purpose)
  *
- * Setup (one time, ~3 minutes):
- *  1. Open the "Mad Apple Winter Workouts — Data" sheet.
- *  2. Extensions → Apps Script. Delete what's there, paste this whole file, Save.
- *  3. Deploy → New deployment → type: Web app.
- *       Execute as: Me
- *       Who has access: Anyone
- *     Deploy, approve the Google prompts, copy the Web app URL (ends in /exec).
- *  4. Paste that URL to Claude (or into config.js in the GitHub repo).
+ * This version is deliberately generic: it reads every tab and saves rows by key.
+ * New features, stats and columns are added from the website and the sheet,
+ * so this script should not need to change again.
  *
- * The Coach PIN lives in the Config tab (cell B2). Change it there any time.
- * Every read and write needs the PIN, so names and numbers stay private.
+ * Deploy: Extensions → Apps Script → paste → Save →
+ *   Deploy → Manage deployments → pencil → Version: New version → Deploy
+ *   (first time only: Deploy → New deployment → Web app, Execute as Me, Access Anyone)
+ *
+ * Config tab (column A = setting, column B = value):
+ *   Coach PIN          full access
+ *   Player code        players: read + the write rules below
+ *   Player hidden tabs comma list of tabs players can't see        (default: Notes)
+ *   Player write rules Tab:mode, comma list                         (default: Tests:fill,Bullpens:create)
+ *       modes: fill = only empty cells, create = new rows only, merge = non-blank values, overwrite = all given values
  */
 
 const SS = SpreadsheetApp.getActiveSpreadsheet();
+const TZ = 'America/Indiana/Indianapolis';
 
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function pinOk(pin) {
-  const real = String(SS.getSheetByName('Config').getRange('B2').getValue()).trim();
-  return real && String(pin || '').trim() === real;
+function config() {
+  const v = SS.getSheetByName('Config').getDataRange().getValues();
+  const c = {};
+  v.forEach(r => { if (r[0] !== '') c[String(r[0]).trim()] = String(r[1]).trim(); });
+  return c;
 }
 
-function rows(name) {
-  const sh = SS.getSheetByName(name);
+function roleFor(pin, c) {
+  pin = String(pin || '').trim();
+  if (!pin) return null;
+  if (c['Coach PIN'] && pin === c['Coach PIN']) return 'coach';
+  if (c['Player code'] && pin === c['Player code']) return 'player';
+  return null;
+}
+
+function list(s, dflt) { return String(s === undefined || s === '' ? dflt : s).split(',').map(x => x.trim()).filter(Boolean); }
+
+function norm(v) {
+  return v instanceof Date ? Utilities.formatDate(v, TZ, 'yyyy-MM-dd') : String(v).trim();
+}
+
+function keyName(tab) { return tab.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''); }
+
+function rows(sh) {
   const v = sh.getDataRange().getValues();
-  const head = v.shift();
+  const head = v.shift() || [];
   return v.filter(r => r.some(c => c !== '')).map(r => {
     const o = {};
-    head.forEach((h, i) => { o[h] = r[i] instanceof Date ? Utilities.formatDate(r[i], 'America/Indiana/Indianapolis', 'yyyy-MM-dd') : r[i]; });
+    head.forEach((h, i) => { if (h !== '') o[h] = r[i] instanceof Date ? norm(r[i]) : r[i]; });
     return o;
   });
 }
 
-function allData() {
-  return {
-    ok: true,
-    roster: rows('Roster'),
-    attendance: rows('Attendance'),
-    bullpens: rows('Bullpens'),
-    tests: rows('Tests'),
-    notes: rows('Notes')
-  };
+function allData(role, c) {
+  const hidden = role === 'player' ? list(c['Player hidden tabs'], 'Notes') : [];
+  const data = {};
+  SS.getSheets().forEach(sh => {
+    const n = sh.getName();
+    if (n === 'Config' || hidden.indexOf(n) >= 0) return;
+    data[keyName(n)] = rows(sh);
+  });
+  return { ok: true, role: role, data: data };
 }
 
 function doGet(e) {
-  const p = e.parameter || {};
-  if (!pinOk(p.pin)) return json({ ok: false, error: 'pin' });
-  return json(allData());
+  const c = config();
+  const role = roleFor((e.parameter || {}).pin, c);
+  if (!role) return json({ ok: false, error: 'pin' });
+  return json(allData(role, c));
 }
 
-function norm(v) {
-  return v instanceof Date ? Utilities.formatDate(v, 'America/Indiana/Indianapolis', 'yyyy-MM-dd') : String(v).trim();
+function headers(sh) {
+  if (sh.getLastColumn() < 1) return [];
+  return sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
 }
 
-function headers(sh) { return sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0]; }
+function playerName(num) {
+  const sh = SS.getSheetByName('Roster');
+  const r = rows(sh).find(p => String(p.Number) === String(num));
+  return r ? (r.First + ' ' + r.Last) : '';
+}
 
-// Find the row where every key column (by header name) matches rec; returns 1-based row or 0.
-function findRow(sh, head, keyCols, rec) {
-  const last = sh.getLastRow();
-  if (last < 2) return 0;
-  const idx = keyCols.map(k => head.indexOf(k));
-  const v = sh.getRange(2, 1, last - 1, head.length).getValues();
-  for (let i = 0; i < v.length; i++) {
-    if (idx.every((c, j) => norm(v[i][c]) === norm(rec[keyCols[j]]))) return i + 2;
+// Save one row. Returns null on success or an error code.
+function save(op, role, c) {
+  const name = String(op.sheet || '');
+  if (!name || name === 'Config') return 'bad_sheet';
+  let sh = SS.getSheetByName(name);
+  if (!sh) {
+    if (role !== 'coach') return 'bad_sheet';
+    sh = SS.insertSheet(name);           // coaches can start a new tracking tab from the site
   }
-  return 0;
-}
+  let mode = op.mode || 'merge';
+  if (role === 'player') {
+    const rules = {};
+    list(c['Player write rules'], 'Tests:fill,Bullpens:create').forEach(x => { const p = x.split(':'); rules[p[0].trim()] = (p[1] || 'fill').trim(); });
+    if (!rules[name]) return 'coach_only';
+    mode = rules[name];
+  }
+  const keys = Array.isArray(op.keys) && op.keys.length ? op.keys : null;
+  const rec = Object.assign({}, op.rec || {});
+  if (!keys) return 'bad_request';
 
-// Write a record (object keyed by header) into the row matching `keyCols`, creating it if needed.
-// Blank values in `rec` don't overwrite existing cells unless `overwrite` is true.
-function upsert(name, keyCols, rec, overwrite) {
-  const sh = SS.getSheetByName(name);
-  const head = headers(sh);
-  let r = findRow(sh, head, keyCols, rec);
+  let head = headers(sh);
+  if (rec.Number !== undefined && rec.Number !== '') {
+    if (head.indexOf('Player') >= 0 && rec.Player === undefined) rec.Player = playerName(rec.Number);
+    if (head.indexOf('Pitcher') >= 0 && name === 'Bullpens' && rec.Pitcher === undefined) rec.Pitcher = playerName(rec.Number);
+  }
+  // New fields become new columns (coach only), placed before "Logged by"/"Updated" when present.
+  const missing = Object.keys(rec).concat(keys).filter((k, i, a) => a.indexOf(k) === i && head.indexOf(k) < 0);
+  if (missing.length) {
+    if (role !== 'coach') return 'coach_only';
+    missing.forEach(k => {
+      const tail = ['Logged by', 'Updated'].map(t => head.indexOf(t)).filter(i => i >= 0);
+      const at = tail.length ? Math.min.apply(null, tail) + 1 : head.length + 1;
+      if (head.length && at <= head.length) sh.insertColumnBefore(at);
+      sh.getRange(1, at).setValue(k).setFontWeight('bold');
+      head = headers(sh);
+    });
+  }
+  if (head.indexOf('Updated') < 0) { sh.getRange(1, head.length + 1).setValue('Updated').setFontWeight('bold'); head = headers(sh); }
+
+  // find existing row
+  const idx = keys.map(k => head.indexOf(k));
+  const last = sh.getLastRow();
+  let r = 0;
+  if (last >= 2) {
+    const v = sh.getRange(2, 1, last - 1, head.length).getValues();
+    for (let i = 0; i < v.length; i++) {
+      if (idx.every((ci, j) => norm(v[i][ci]) === norm(rec[keys[j]]))) { r = i + 2; break; }
+    }
+  }
+  if (r && mode === 'create') return 'exists';
   const isNew = !r;
   if (isNew) r = sh.getLastRow() + 1;
   const cur = isNew ? head.map(() => '') : sh.getRange(r, 1, 1, head.length).getValues()[0];
   const out = head.map((h, i) => {
     if (h === 'Updated') return new Date();
-    if (Object.prototype.hasOwnProperty.call(rec, h)) {
-      const val = rec[h];
-      if (overwrite || (val !== '' && val !== null && val !== undefined)) return val;
-    }
-    return cur[i];
+    if (h === 'Logged by') return role;
+    if (!Object.prototype.hasOwnProperty.call(rec, h)) return cur[i];
+    const val = rec[h];
+    const blank = val === '' || val === null || val === undefined;
+    if (mode === 'overwrite') return blank ? '' : val;
+    if (mode === 'fill') return (cur[i] === '' && !blank) ? val : cur[i];
+    return blank ? cur[i] : val;                         // merge / create
   });
   sh.getRange(r, 1, 1, head.length).setValues([out]);
-}
-
-function playerName(num) {
-  const r = rows('Roster').find(p => String(p.Number) === String(num));
-  return r ? (r.First + ' ' + r.Last) : '';
+  return null;
 }
 
 function doPost(e) {
   let b = {};
   try { b = JSON.parse(e.postData.contents || '{}'); } catch (err) { return json({ ok: false, error: 'bad_request' }); }
-  if (!pinOk(b.pin)) return json({ ok: false, error: 'pin' });
-
+  const c = config();
+  const role = roleFor(b.pin, c);
+  if (!role) return json({ ok: false, error: 'pin' });
+  const ops = b.action === 'batch' ? (b.ops || []) : [b];
   const lock = LockService.getScriptLock();
-  lock.waitLock(15000);
+  lock.waitLock(20000);
+  let err = null;
   try {
-    switch (b.action) {
-      case 'attendance':
-        upsert('Attendance', ['Week', 'Number'], {
-          Week: b.week, Date: b.date, Number: b.num, Player: playerName(b.num), Present: !!b.present
-        }, true);
-        break;
-
-      case 'pitcher': {
-        const sh = SS.getSheetByName('Roster');
-        const r = findRow(sh, headers(sh), ['Number'], { Number: b.num });
-        if (r) sh.getRange(r, 4).setValue(!!b.pitcher);
-        break;
-      }
-
-      case 'bullpen': {
-        const pct = b.pitches ? Math.round((b.strikes / b.pitches) * 100) : '';
-        upsert('Bullpens', ['Week', 'Number'], {
-          Week: b.week, Date: b.date, Number: b.num, Pitcher: playerName(b.num),
-          Pitches: b.pitches, Strikes: b.strikes, 'Strike %': pct,
-          'Batters faced': b.batters, '1st-pitch strikes': b.fps, 'Ahead after 3': b.ahead,
-          Changeups: b.ch, 'CH strikes': b.chStrikes, Cue: b.cue
-        }, true);
-        break;
-      }
-
-      case 'test':
-        upsert('Tests', ['Week', 'Number'], {
-          Week: b.week, Date: b.date, Number: b.num, Player: playerName(b.num),
-          'Max exit velo (mph)': b.ev, 'Line-drive %': b.ld, '30-yd sprint (sec)': b.sprint,
-          'Broad jump (in)': b.broad, 'Plank (sec)': b.plank, 'Home to 1st (sec)': b.h1
-        }, false);
-        break;
-
-      case 'player':
-        upsert('Roster', ['Number'], {
-          Number: b.num, Primary: b.pos1, Secondary: b.pos2, Bats: b.bats, Throws: b.throws,
-          Pitcher: (b.pos1 === 'P' || b.pos2 === 'P') ? true : !!b.pitcher
-        }, true);
-        break;
-
-      // Generic save for columns added later, so new stats don't need a redeploy.
-      case 'save': {
-        const allowed = ['Attendance', 'Bullpens', 'Tests', 'Notes', 'Roster'];
-        if (allowed.indexOf(b.sheet) < 0 || !Array.isArray(b.keys) || !b.rec) return json({ ok: false, error: 'bad_request' });
-        const rec = Object.assign({}, b.rec);
-        if (rec.Number !== undefined && b.sheet !== 'Roster') {
-          const nm = playerName(rec.Number);
-          if (b.sheet === 'Bullpens') rec.Pitcher = nm; else rec.Player = nm;
-        }
-        upsert(b.sheet, b.keys, rec, !!b.overwrite);
-        break;
-      }
-
-      case 'note':
-        upsert('Notes', ['Week'], { Week: b.week, Date: b.date, Notes: b.text }, true);
-        break;
-
-      default:
-        return json({ ok: false, error: 'unknown_action' });
-    }
+    for (let i = 0; i < ops.length && !err; i++) err = save(ops[i], role, c);
   } finally {
     lock.releaseLock();
   }
-  return json(allData());
+  const res = allData(role, c);
+  if (err) { res.ok = false; res.error = err; }
+  return json(res);
 }
