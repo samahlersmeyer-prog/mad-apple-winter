@@ -133,9 +133,29 @@ function doPost(e) {
         upsert('Tests', ['Week', 'Number'], {
           Week: b.week, Date: b.date, Number: b.num, Player: playerName(b.num),
           'Max exit velo (mph)': b.ev, 'Line-drive %': b.ld, '30-yd sprint (sec)': b.sprint,
-          'Broad jump (in)': b.broad, 'Plank (sec)': b.plank
+          'Broad jump (in)': b.broad, 'Plank (sec)': b.plank, 'Home to 1st (sec)': b.h1
         }, false);
         break;
+
+      case 'player':
+        upsert('Roster', ['Number'], {
+          Number: b.num, Primary: b.pos1, Secondary: b.pos2, Bats: b.bats, Throws: b.throws,
+          Pitcher: (b.pos1 === 'P' || b.pos2 === 'P') ? true : !!b.pitcher
+        }, true);
+        break;
+
+      // Generic save for columns added later, so new stats don't need a redeploy.
+      case 'save': {
+        const allowed = ['Attendance', 'Bullpens', 'Tests', 'Notes', 'Roster'];
+        if (allowed.indexOf(b.sheet) < 0 || !Array.isArray(b.keys) || !b.rec) return json({ ok: false, error: 'bad_request' });
+        const rec = Object.assign({}, b.rec);
+        if (rec.Number !== undefined && b.sheet !== 'Roster') {
+          const nm = playerName(rec.Number);
+          if (b.sheet === 'Bullpens') rec.Pitcher = nm; else rec.Player = nm;
+        }
+        upsert(b.sheet, b.keys, rec, !!b.overwrite);
+        break;
+      }
 
       case 'note':
         upsert('Notes', ['Week'], { Week: b.week, Date: b.date, Notes: b.text }, true);

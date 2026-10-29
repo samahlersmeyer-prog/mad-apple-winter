@@ -15,7 +15,7 @@
 :root{
   --bg:#f3f5f7; --card:#ffffff; --ink:#14202e; --muted:#5d6b7a; --line:#d9dfe6;
   --apple:#c4122f; --apple-soft:#fbe7ea; --turf:#1f7a4d; --turf-soft:#e3f2ea; --clay:#b8661f; --clay-soft:#f7ece0; --sky:#2a5d9f; --sky-soft:#e5edf8;
-  --now:#ffd23f;
+  --now:#ffd23f; --grass:#cfe6d4; --grass-dk:#9fcbab; --dirt:#e6c9a6; --chalk:#ffffff;
   --display:"Saira Condensed","Arial Narrow",Impact,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
@@ -23,7 +23,7 @@
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#0e141b; --card:#16202b; --ink:#e8edf2; --muted:#93a1b0; --line:#273443;
-  --apple:#ff4d63; --apple-soft:#3a1820; --turf:#4cc38a; --turf-soft:#13301f; --clay:#e5974f; --clay-soft:#38260f; --sky:#7fb0ef; --sky-soft:#152844; --now:#e0b52a; color-scheme:dark}}
+  --apple:#ff4d63; --apple-soft:#3a1820; --turf:#4cc38a; --turf-soft:#13301f; --clay:#e5974f; --clay-soft:#38260f; --sky:#7fb0ef; --sky-soft:#152844; --now:#e0b52a; --grass:#16342a; --grass-dk:#1f4a39; --dirt:#4a3624; --chalk:#c9d4de; color-scheme:dark}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -32,7 +32,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:#14202e;color:#f3f5f7}
 header.top .inner{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px 0}
 .brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.brand h1{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.1}
+.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(19px,5.5vw,24px);white-space:nowrap;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.1}
 .brand h1 span{color:#ff4d63}
 .sync{font-size:12px;opacity:.75;white-space:nowrap;font-family:var(--mono)}
 nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:10px 0;scrollbar-width:none}
@@ -157,6 +157,45 @@ table.ref th{font-family:var(--mono);font-size:11px;color:var(--muted);text-tran
 .lock input{flex:1 1 140px;font-size:16px}
 .err{color:var(--apple);font-size:13px;font-weight:600;margin:8px 0 0}
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14202e;color:#f3f5f7;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+
+/* Team tab */
+.subnav{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.subnav a{text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;padding:8px 14px;border-radius:99px;border:1.5px solid var(--line)}
+.subnav a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.plist{display:flex;flex-direction:column}
+.prow{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.prow:last-child{border-bottom:0}
+.prow .num{font-family:var(--display);font-weight:800;font-size:22px;text-align:center;font-variant-numeric:tabular-nums}
+.prow .nm{font-weight:700;min-width:0}
+.prow .nm small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.prow .pos{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.posb{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--bg);border:1px solid var(--line)}
+.posb.main{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.posb.none{color:var(--muted)}
+.field{width:100%;max-width:560px;display:block;margin:0 auto}
+.field .grass{fill:var(--grass)} .field .grass2{fill:var(--grass-dk)} .field .dirt{fill:var(--dirt)} .field .chalk{stroke:var(--chalk);stroke-width:2;fill:none}
+.field .base{fill:var(--chalk)} .field .lbl{fill:var(--apple);font-family:var(--mono);font-size:11px;font-weight:700}
+.field .pn{fill:var(--ink);font-family:var(--body);font-size:12px;font-weight:700} .field .pn2{fill:var(--muted);font-family:var(--body);font-size:11px;font-weight:500}
+.field .tag-bg{fill:var(--card);opacity:.92}
+.pens{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.pc{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card);text-decoration:none;color:inherit;display:block}
+.pc h4{margin:0;font-family:var(--display);font-size:20px;text-transform:uppercase;line-height:1.1}
+.pc .big{font-family:var(--display);font-size:34px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.pc .big.good{color:var(--turf)} .pc .big.warn{color:var(--clay)} .pc .big.bad{color:var(--apple)}
+.pc .kv{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;font-size:12px;color:var(--muted)}
+.pc .kv b{display:block;color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+.spark{width:100%;height:46px;display:block;margin-top:8px}
+.spark .tgt{stroke:var(--turf);stroke-dasharray:3 3;stroke-width:1}
+.spark .ln{stroke:var(--apple);stroke-width:2;fill:none} .spark .pt{fill:var(--apple)}
+.spark .ax{fill:var(--muted);font-size:9px;font-family:var(--mono)}
+.edit{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.edit label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.back{display:inline-block;margin-top:16px;color:var(--muted);text-decoration:none;font-weight:600;font-size:14px}
+.stopwatch{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--bg);border-radius:12px;padding:12px;margin:10px 0 14px}
+.stopwatch select{width:100%}
+.sw-time{font-family:var(--display);font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.sw-btn{font:inherit;font-family:var(--display);font-size:22px;font-weight:800;text-transform:uppercase;border:0;border-radius:12px;padding:14px 22px;cursor:pointer;background:var(--turf);color:#fff;min-width:120px;min-height:60px}
+.sw-btn.run{background:var(--apple)}
 @media (max-width:480px){.blk{grid-template-columns:1fr;gap:6px}.time small{display:inline;margin-left:6px}.scoreboard{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:no-preference){.chip,.pp{transition:background .12s,color .12s,transform .08s}.pp:active{transform:scale(.97)}}
 </style>
@@ -186,7 +225,7 @@ const WEEKS=[
  P:{t:"Baseline bullpen",l:["Pre-pen on flat ground: 3 rocker, 3 hip-lead, 5 from the stretch","20 fastballs at 70%. Catcher calls the count out loud after each pitch","Film side and front in slow-mo. Chart every pen below","Non-throwers: catch, chart on the phone, then towel drill ×15 and balance-point holds ×10"]},
  H:{t:"HitTrax baseline",l:["Cage 1 (HitTrax): 10 swings each; captain logs max exit velo and line-drive %","Cage 2 (tee): pause tee ×10, high tee ×5, low tee ×5","Swap cages every 5 minutes"]},
  D:{t:"Ground-ball fundamentals",l:["Short-hop series with a partner, 15 ft: backhand, forehand, middle ×10 each","Funnel + footwork: field, funnel to belly, crow hop, throw to a target","Fungo rounds: 3 balls each, sprint back to the line"]},
- C:{t:"Test day",l:["30-yd sprint, best of 2 (stopwatch)","Broad jump, best of 2 (tape on turf)","Plank hold to failure","Enter results in Test results below"]},
+ C:{t:"Test day",l:["30-yd sprint, best of 2 (stopwatch)","Broad jump, best of 2 (tape on turf)","Plank hold to failure","Home to 1st: 2 runs each from the box, swing and go. Time it with the stopwatch below","Enter results in Test results below"]},
  X:"Short-hop knockout: miss one and you're out. Last kid standing picks next week's warm-up music.",
  low:"6–8: pens in Cage 3 with hitters standing in, then HitTrax. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart."},
 {id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,
@@ -207,7 +246,7 @@ const WEEKS=[
  P:{t:"Count games",l:["1-1 Game: every pitch starts at 1-1. Strike wins the at-bat","3-Pitch Battles: 6 batters, win if 2 of 3 are strikes (tap New batter between)","Use the changeup in fastball counts (1-0, 2-1)","Compare first-pitch strike % to Week 1 in the Season tab"]},
  H:{t:"Two-strike hitting",l:["Two-strike stance: choke up, widen, shorten the stride","Battle drill: machine on the black, foul off or put it in play ×8","Front toss mixing fast and slow ×10"]},
  D:{t:"PFP (pitchers' fielding)",l:["Comebackers to 2B, ball to the 1B side: pitcher covers 1B","Bunts down both lines with a call ('Me! Me!')","3B and catcher communication on pop-ups near the plate"]},
- C:{t:"Baserunning",l:["Rounding 1B turns: hit the inside corner ×6","First-step leads and steal reads off a coach","Core circuit: dead bugs, bird dogs, side planks"]},
+ C:{t:"Baserunning",l:["Home to 1st, timed: 2 runs each (log with the stopwatch below)","Rounding 1B turns: hit the inside corner ×6","First-step leads and steal reads off a coach","Core circuit: dead bugs, bird dogs, side planks"]},
  X:"1-1 Game team scoring: each group's pitchers throw 10 pitches at 1-1. Group with the most strikes wins.",
  low:"6–8: live 3-Pitch Battles in Cage 3, hitters on a two-strike count. 5 or fewer: PFP for everyone, then count games."},
 {id:"w5",date:"2026-11-27",label:"Nov 27",theme:"Light week (Thanksgiving)",focus:"Expect low turnout. Rest arms, sharpen recognition, and run the situations that need few bodies.",cue:"See it slow, react fast.",cap:"Flat ground only · 20 throws · 70%",capN:0,
@@ -221,7 +260,7 @@ const WEEKS=[
  P:{t:"Live at-bats",l:["Cage 3: each pitcher throws 2 innings vs. our hitters","Catcher calls the game, pitcher works on a 12-second tempo","Chart every batter: strike %, first-pitch %, ahead after 3"]},
  H:{t:"Live + HitTrax re-test",l:["Live ABs vs. our pitchers in Cage 3","HitTrax re-test: 10 swings, log max exit velo and line-drive %","Compare to Week 1 in the Season tab"]},
  D:{t:"Situations",l:["Runners on, coach calls the situation, everyone talks before the pitch","Cuts and relays with live runners","Pop-up communication"]},
- C:{t:"Re-test",l:["30-yd sprint, broad jump, plank","Enter results below; Season tab shows Week 1 vs. Week 6"]},
+ C:{t:"Re-test",l:["30-yd sprint, broad jump, plank, home to 1st","Enter results below; Season tab shows Week 1 vs. Week 6"]},
  X:"HitTrax Home Run Derby: top exit velocity wins.",
  low:"6–8: everyone pitches 1 inning live and hits 2 ABs. 5 or fewer: coaches pitch live too."}
 ];
@@ -249,7 +288,7 @@ const truthy=v=>v===true||v==="TRUE"||v==="true"||v===1;
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2600)}
 
 /* ---------- Derived data ---------- */
-function roster(){return (D?D.roster:[]).map(r=>({n:Number(r.Number),f:r.First,l:r.Last,p:truthy(r.Pitcher)})).filter(r=>r.n||r.n===0).sort((a,b)=>a.n-b.n)}
+function roster(){return (D?D.roster:[]).map(r=>{const pos1=String(r.Primary||""),pos2=String(r.Secondary||"");return {n:Number(r.Number),f:r.First,l:r.Last,pos1,pos2,bats:String(r.Bats||""),throws:String(r.Throws||""),p:truthy(r.Pitcher)||pos1==="P"||pos2==="P"}}).filter(r=>r.n||r.n===0).sort((a,b)=>a.n-b.n)}
 function presentNums(wid){const s=new Set();(D?D.attendance:[]).forEach(r=>{if(r.Week===wid&&truthy(r.Present))s.add(Number(r.Number))});return s}
 function pens(wid){return (D?D.bullpens:[]).filter(r=>r.Week===wid)}
 function tests(wid){return (D?D.tests:[]).filter(r=>r.Week===wid)}
@@ -292,12 +331,14 @@ function updateSync(){const s=$("#sync");if(!s)return;
 
 /* ---------- Routing ---------- */
 function defaultTab(){const t=todayStr();const w=WEEKS.find(w=>w.date>=t);return w?w.id:"w6"}
-function route(){const h=location.hash.slice(1);current=(h==="season"||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
+function route(){const h=location.hash.slice(1);current=(h==="season"||h==="team"||h==="field"||h==="bullpen"||/^player-\d+$/.test(h)||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
+const isTeam=()=>current==="team"||current==="field"||current==="bullpen"||/^player-/.test(current);
 
 /* ---------- Views ---------- */
 function renderTabs(){
   const t=$("#tabs");
   t.innerHTML=WEEKS.map((w,i)=>`<a href="#${w.id}" ${current===w.id?'aria-current="page"':""}>Wk ${i+1}<small>${w.label}</small></a>`).join("")+
+   `<a href="#team" ${isTeam()?'aria-current="page"':""}>Team<small>Roster</small></a>`+
    `<a href="#season" ${current==="season"?'aria-current="page"':""}>Season<small>Progress</small></a>`;
   const a=t.querySelector('[aria-current]'); if(a) a.scrollIntoView({block:"nearest",inline:"center"});
 }
@@ -376,14 +417,25 @@ function penPanel(w,present){
   ${savedRows.length?`<div class="scroll" style="margin-top:12px"><table class="data"><thead><tr><th>Tonight's pens</th><th>P</th><th>K%</th><th>1st K</th><th>Ahead</th><th>CH</th></tr></thead><tbody>${savedRows.map(r=>`<tr><td>#${esc(r.Number)} ${esc(r.Pitcher)}</td><td>${esc(r.Pitches)}</td><td>${esc(r["Strike %"])}%</td><td>${esc(r["1st-pitch strikes"])}/${esc(r["Batters faced"])}</td><td>${esc(r["Ahead after 3"])}/${esc(r["Batters faced"])}</td><td>${r.Changeups?esc(r["CH strikes"])+"/"+esc(r.Changeups):"–"}</td></tr>`).join("")}</tbody></table></div>`:""}
   </section>`;
 }
+const TCOLS=[["ev","Max exit velo (mph)","EV mph",1],["ld","Line-drive %","LD %",1],["sprint","30-yd sprint (sec)","30 yd s",-1],["h1","Home to 1st (sec)","H→1 s",-1],["broad","Broad jump (in)","Broad in",1],["plank","Plank (sec)","Plank s",1]];
+let drafts={};   // unsaved test entries: drafts[wid][num][key]
+let sw={start:0,running:false,elapsed:0,who:""};
+function draft(wid,num,k){return ((drafts[wid]||{})[num]||{})[k]}
+function setDraft(wid,num,k,v){drafts[wid]=drafts[wid]||{};drafts[wid][num]=drafts[wid][num]||{};drafts[wid][num][k]=v}
+function swText(){const ms=sw.running?performance.now()-sw.start:sw.elapsed;return (ms/1000).toFixed(2)}
+function tickSW(){const el=document.getElementById("sw-time");if(el)el.textContent=swText();if(sw.running)requestAnimationFrame(tickSW)}
 function testsPanel(w,present){
   const R=roster(), list=present.size?R.filter(p=>present.has(p.n)):R, T=tests(w.id);
-  const v=(num,col)=>{const r=T.find(r=>Number(r.Number)===num);return r&&r[col]!==""?r[col]:""};
-  const cols=[["ev","Max exit velo (mph)","EV mph"],["ld","Line-drive %","LD %"],["sprint","30-yd sprint (sec)","30 yd s"],["broad","Broad jump (in)","Broad in"],["plank","Plank (sec)","Plank s"]];
-  return `<details class="panel" ${w.tests?"open":""}><summary><div class="panel-head" style="margin:0"><h3>Test results</h3><span class="count">${T.length} logged</span></div></summary>
-   <p class="hint" style="margin-top:10px">${w.tests?"Test night. ":""}Enter what you measured, then tap Save on that row. Blank boxes don't erase anything.</p>
-   <div class="scroll"><table class="data"><thead><tr><th>Player</th>${cols.map(c=>`<th>${c[2]}</th>`).join("")}<th></th></tr></thead><tbody>
-   ${list.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${cols.map(c=>`<td><input id="t-${w.id}-${p.n}-${c[0]}" inputmode="decimal" aria-label="${esc(p.f)} ${c[1]}" value="${esc(v(p.n,c[1]))}"></td>`).join("")}<td><button class="btn ghost" style="min-height:36px;padding:6px 10px" data-savetest="${p.n}">Save</button></td></tr>`).join("")}
+  const v=(num,col)=>{const r=T.find(r=>Number(r.Number)===num);return r&&r[col]!==""&&r[col]!=null?r[col]:""};
+  if(!list.some(p=>String(p.n)===sw.who)) sw.who=String((list[0]||{}).n??"");
+  return `<details class="panel" id="tests" ${w.tests||sw.running||sw.elapsed?"open":""}><summary><div class="panel-head" style="margin:0"><h3>Test results</h3><span class="count">${T.length} logged</span></div></summary>
+   <p class="hint" style="margin-top:10px">Home-to-1st stopwatch: pick the runner, tap Start on contact, Stop when his foot hits the bag. The time drops into his row; tap Save.</p>
+   <div class="stopwatch"><div><label class="hint" for="swwho" style="margin:0 0 4px;display:block">Runner</label><select id="swwho">${list.map(p=>`<option value="${p.n}" ${String(p.n)===sw.who?"selected":""}>#${p.n} ${esc(p.f)} ${esc(p.l)}</option>`).join("")}</select>
+    <div class="sw-time" id="sw-time" style="margin-top:8px">${swText()}</div></div>
+    <button class="sw-btn ${sw.running?"run":""}" id="swbtn">${sw.running?"Stop":"Start"}</button></div>
+   <p class="hint">Enter what you measured, then tap Save on that row. Blank boxes don't erase anything.</p>
+   <div class="scroll"><table class="data"><thead><tr><th>Player</th>${TCOLS.map(c=>`<th>${c[2]}</th>`).join("")}<th></th></tr></thead><tbody>
+   ${list.map(p=>`<tr><td><a href="#player-${p.n}" style="color:inherit">#${p.n} ${esc(p.f)}</a></td>${TCOLS.map(c=>{const d=draft(w.id,p.n,c[0]);return `<td><input id="t-${w.id}-${p.n}-${c[0]}" data-draft="${w.id}|${p.n}|${c[0]}" inputmode="decimal" aria-label="${esc(p.f)} ${c[1]}" value="${esc(d!=null?d:v(p.n,c[1]))}"></td>`}).join("")}<td><button class="btn ghost" style="min-height:36px;padding:6px 10px" data-savetest="${p.n}">Save</button></td></tr>`).join("")}
    </tbody></table></div></details>`;
 }
 function weekView(w,idx){
@@ -437,7 +489,7 @@ function seasonView(){
   const pitchers=R.filter(p=>p.p||(D.bullpens||[]).some(b=>Number(b.Number)===p.n));
   const penCell=(p,w)=>{const r=pens(w.id).find(r=>Number(r.Number)===p.n);return r?`${esc(r["Strike %"])}%`:"–"};
   const fpsOf=p=>{const rs=(D.bullpens||[]).filter(r=>Number(r.Number)===p.n);const f=rs.reduce((a,r)=>a+Number(r["1st-pitch strikes"]||0),0),b=rs.reduce((a,r)=>a+Number(r["Batters faced"]||0),0);return b?Math.round(f/b*100)+"%":"–"};
-  const tcols=[["Max exit velo (mph)","EV",1],["Line-drive %","LD%",1],["30-yd sprint (sec)","30 yd",-1],["Broad jump (in)","Broad",1],["Plank (sec)","Plank",1]];
+  const tcols=[["Max exit velo (mph)","EV",1],["Line-drive %","LD%",1],["30-yd sprint (sec)","30 yd",-1],["Home to 1st (sec)","H→1",-1],["Broad jump (in)","Broad",1],["Plank (sec)","Plank",1]];
   const testOf=(p,col)=>{const rs=(D.tests||[]).filter(r=>Number(r.Number)===p.n&&r[col]!=="").sort((a,b)=>a.Week.localeCompare(b.Week));if(!rs.length)return "–";
     const first=Number(rs[0][col]),last=Number(rs[rs.length-1][col]);if(rs.length===1)return esc(first);
     const dir=tcols.find(c=>c[0]===col)[2],d=+(last-first).toFixed(2),better=d*dir>0;
@@ -451,12 +503,97 @@ function seasonView(){
    ${pitchers.length?`<div class="scroll"><table class="data"><thead><tr><th>Pitcher</th>${WEEKS.map((w,i)=>`<th>Wk ${i+1}</th>`).join("")}<th>1st-pitch K</th></tr></thead><tbody>${pitchers.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${WEEKS.map(w=>`<td>${penCell(p,w)}</td>`).join("")}<td>${fpsOf(p)}</td></tr>`).join("")}</tbody></table></div>`:`<p class="empty">Mark pitchers above or save a bullpen to start the chart.</p>`}</section>
   <section class="panel"><div class="panel-head"><h3>Tests: first → latest</h3></div>
    <div class="scroll"><table class="data"><thead><tr><th>Player</th>${tcols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody>${R.map(p=>`<tr><td>#${p.n} ${esc(p.f)}</td>${tcols.map(c=>`<td>${testOf(p,c[0])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-   <p class="hint" style="margin-top:10px">Green is better (faster sprint, more of everything else). The full log lives in the team Google Sheet.</p></section>`+ref;
+   <p class="hint" style="margin-top:10px">Green is better (faster times, more of everything else). Tap a player in the Team tab for his week-by-week history. The full log lives in the team Google Sheet.</p></section>`+ref;
+}
+const POS=["P","C","1B","2B","3B","SS","LF","CF","RF"];
+const POS_XY={P:[200,262],C:[200,392],"1B":[300,250],"2B":[252,190],"3B":[100,250],SS:[148,190],LF:[78,112],CF:[200,62],RF:[322,112]};
+function num(v){return v===""||v==null||isNaN(Number(v))?null:Number(v)}
+function weekIdx(id){return WEEKS.findIndex(w=>w.id===id)}
+function pitcherSeason(n){
+  const rs=(D.bullpens||[]).filter(r=>Number(r.Number)===n).sort((a,b)=>weekIdx(a.Week)-weekIdx(b.Week));
+  const sum=k=>rs.reduce((a,r)=>a+(num(r[k])||0),0);
+  return {rs,pitches:sum("Pitches"),strikes:sum("Strikes"),batters:sum("Batters faced"),fps:sum("1st-pitch strikes"),ahead:sum("Ahead after 3"),ch:sum("Changeups"),chS:sum("CH strikes"),last:rs[rs.length-1]};
+}
+function spark(rs){
+  const W=240,H=46,x=i=>14+i*(W-28)/5,y=v=>H-8-(v/100)*(H-16);
+  const pts=WEEKS.map((w,i)=>{const r=rs.find(r=>r.Week===w.id);return r&&num(r["Strike %"])!=null?[x(i),y(num(r["Strike %"]))]:null});
+  const ln=pts.filter(Boolean).map(p=>p.join(",")).join(" ");
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-label="Strike percent by week"><line class="tgt" x1="8" x2="${W-8}" y1="${y(60)}" y2="${y(60)}"/>${ln?`<polyline class="ln" points="${ln}"/>`:""}${pts.map(p=>p?`<circle class="pt" cx="${p[0]}" cy="${p[1]}" r="3"/>`:"").join("")}${WEEKS.map((w,i)=>`<text class="ax" x="${x(i)}" y="${H-1}" text-anchor="middle">${i+1}</text>`).join("")}</svg>`;
+}
+function posBadges(p){return p.pos1||p.pos2?`<span class="posb main">${esc(p.pos1||"–")}</span>${p.pos2?`<span class="posb">${esc(p.pos2)}</span>`:""}`:`<span class="posb none">No position</span>`}
+function teamView(){
+  const head=`<div class="hero"><div class="eyebrow">Mad Apple baseball · 2026–27</div><h2>Team</h2><p>Roster with positions, the field, and the bullpen. Tap any player for his week-by-week numbers.</p>
+   <nav class="subnav" aria-label="Team views"><a href="#team" ${current==="team"?'aria-current="page"':""}>Roster</a><a href="#field" ${current==="field"?'aria-current="page"':""}>Field</a><a href="#bullpen" ${current==="bullpen"?'aria-current="page"':""}>Bullpen</a></nav></div>`;
+  if(!(D&&pin)) return head+lockPanel();
+  if(current.startsWith("player-")) return playerView(Number(current.slice(7)));
+  const R=roster();
+  if(current==="field"){
+    const at=pos=>[...R.filter(p=>p.pos1===pos),...R.filter(p=>p.pos2===pos)];
+    const un=R.filter(p=>!p.pos1);
+    const labels=POS.map(pos=>{const [x,y]=POS_XY[pos],ps=at(pos),shown=ps.slice(0,3),more=ps.length-shown.length;
+      const lines=shown.map((p,i)=>`<text class="${p.pos1===pos?"pn":"pn2"}" x="${x}" y="${y+14+i*14}" text-anchor="middle">#${p.n} ${esc(p.f)}</text>`).join("")+(more>0?`<text class="pn2" x="${x}" y="${y+14+shown.length*14}" text-anchor="middle">+${more} more</text>`:"");
+      const h=16+Math.max(1,shown.length+(more>0?1:0))*14;
+      return `<g><rect class="tag-bg" x="${x-46}" y="${y-12}" width="92" height="${h}" rx="6"/><text class="lbl" x="${x}" y="${y}" text-anchor="middle">${pos}</text>${ps.length?lines:`<text class="pn2" x="${x}" y="${y+14}" text-anchor="middle">open</text>`}</g>`}).join("");
+    return head+`<section class="panel"><div class="panel-head"><h3>Field</h3><span class="hint" style="margin:0">Bold = primary · gray = secondary</span></div>
+     <svg class="field" viewBox="0 0 400 420" role="img" aria-label="Baseball field with players at their positions">
+      <path class="grass2" d="M200 395 L10 205 A270 270 0 0 1 390 205 Z"/>
+      <path class="grass" d="M200 395 L35 230 A235 235 0 0 1 365 230 Z"/>
+      <path class="dirt" d="M200 380 L95 275 A150 150 0 0 1 305 275 Z"/>
+      <polygon class="grass" points="200,345 262,283 200,221 138,283"/>
+      <circle class="dirt" cx="200" cy="283" r="14"/>
+      <circle class="dirt" cx="200" cy="378" r="22"/>
+      <line class="chalk" x1="200" y1="380" x2="10" y2="190"/><line class="chalk" x1="200" y1="380" x2="390" y2="190"/>
+      <rect class="base" x="194" y="374" width="12" height="12" transform="rotate(45 200 380)"/>
+      <rect class="base" x="263" y="311" width="10" height="10" transform="rotate(45 268 316)"/>
+      <rect class="base" x="195" y="242" width="10" height="10" transform="rotate(45 200 247)"/>
+      <rect class="base" x="127" y="311" width="10" height="10" transform="rotate(45 132 316)"/>
+      ${labels}</svg>
+     ${un.length?`<p class="hint" style="margin-top:12px"><b>No position yet:</b> ${un.map(p=>`<a href="#player-${p.n}" style="color:inherit">#${p.n} ${esc(p.f)}</a>`).join(", ")}. Tap a name to set one.</p>`:""}</section>`;
+  }
+  if(current==="bullpen"){
+    const ps=R.filter(p=>p.p||(D.bullpens||[]).some(b=>Number(b.Number)===p.n)).map(p=>({p,s:pitcherSeason(p.n)}))
+      .sort((a,b)=>(pct(b.s.strikes,b.s.pitches)??-1)-(pct(a.s.strikes,a.s.pitches)??-1));
+    return head+`<section class="panel"><div class="panel-head"><h3>Bullpen</h3><span class="hint" style="margin:0">Sorted by season strike % · dashed line = 60% goal</span></div>
+     ${ps.length?`<div class="pens">${ps.map(({p,s})=>{const sp=pct(s.strikes,s.pitches),fp=pct(s.fps,s.batters),ap=pct(s.ahead,s.batters);
+       return `<a class="pc" href="#player-${p.n}"><div class="row" style="justify-content:space-between"><h4>#${p.n} ${esc(p.f)} ${esc(p.l)}</h4><span>${p.throws?`<span class="posb">${esc(p.throws)}HP</span>`:""}</span></div>
+        <div class="row" style="justify-content:space-between;align-items:baseline;margin-top:6px"><span class="big ${grade(sp,60,50)}">${sp==null?"–":sp+"%"}</span><span class="hint" style="margin:0">${s.rs.length} pen${s.rs.length===1?"":"s"} · ${s.pitches} pitches</span></div>
+        ${spark(s.rs)}
+        <div class="kv"><div>1st-pitch K<b>${fp==null?"–":fp+"%"}</b></div><div>Ahead after 3<b>${ap==null?"–":ap+"%"}</b></div><div>CH strikes<b>${s.ch?pct(s.chS,s.ch)+"%":"–"}</b></div></div>
+        ${s.last&&s.last.Cue?`<p class="hint" style="margin:8px 0 0">Cue: ${esc(s.last.Cue)}</p>`:""}</a>`}).join("")}</div>`
+     :`<p class="empty">No pitchers yet. Set a player's position to P (tap him in Roster) or save a bullpen on a Friday tab.</p>`}</section>`;
+  }
+  const att=n=>WEEKS.filter(w=>presentNums(w.id).has(n)).length;
+  return head+`<section class="panel"><div class="panel-head"><h3>Roster</h3><span class="count">${R.length} players</span></div>
+   <div class="plist">${R.map(p=>`<a class="prow" href="#player-${p.n}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}<small>${[p.bats||p.throws?`B/T ${esc(p.bats||"?")}/${esc(p.throws||"?")}`:"",`${att(p.n)} of ${WEEKS.length} Fridays`].filter(Boolean).join(" · ")}</small></span><span class="pos">${posBadges(p)}</span></a>`).join("")}</div>
+   <p class="hint" style="margin-top:10px">Tap a player to set positions, bats/throws, and see his history.</p></section>`;
+}
+let pdraft={};
+function pd(k,p){const d=pdraft[p.n];return d&&d[k]!=null?d[k]:p[k]}
+function playerView(n){
+  const R=roster(),p=R.find(x=>x.n===n);
+  if(!p) return `<section class="panel"><p class="empty">No player #${n} on the roster.</p></section><a class="back" href="#team">← Roster</a>`;
+  const sel=(id,opts,val,label)=>`<label for="${id}">${label}<select id="${id}"><option value="">–</option>${opts.map(o=>`<option ${o===val?"selected":""}>${o}</option>`).join("")}</select></label>`;
+  const rows=WEEKS.map((w,i)=>{const here=presentNums(w.id).has(n),pen=pens(w.id).find(r=>Number(r.Number)===n),t=tests(w.id).find(r=>Number(r.Number)===n);
+    const tv=k=>t&&t[k]!==""&&t[k]!=null?esc(t[k]):"–";
+    return {i,w,here,pen,t,cells:`<td>Wk ${i+1}<br><span class="hint" style="margin:0">${w.label}</span></td><td>${here?'<span class="dot" aria-label="present"></span>':'<span class="dot no" aria-label="absent"></span>'}</td><td>${pen?esc(pen.Pitches):"–"}</td><td>${pen?esc(pen["Strike %"])+"%":"–"}</td><td>${pen?esc(pen["1st-pitch strikes"])+"/"+esc(pen["Batters faced"]):"–"}</td><td>${tv("Max exit velo (mph)")}</td><td>${tv("Line-drive %")}</td><td>${tv("30-yd sprint (sec)")}</td><td>${tv("Home to 1st (sec)")}</td><td>${tv("Broad jump (in)")}</td><td>${tv("Plank (sec)")}</td>`}});
+  const s=pitcherSeason(n),sp=pct(s.strikes,s.pitches);
+  const best=(col,dir)=>{const v=(D.tests||[]).filter(r=>Number(r.Number)===n).map(r=>num(r[col])).filter(v=>v!=null);return v.length?(dir<0?Math.min(...v):Math.max(...v)):null};
+  const cues=s.rs.filter(r=>r.Cue);
+  return `<a class="back" href="#team">← Roster</a>
+  <div class="hero" style="padding-top:8px"><div class="eyebrow">#${p.n}${p.pos1?" · "+esc(p.pos1):""}${p.pos2?" / "+esc(p.pos2):""}${p.bats||p.throws?" · B/T "+esc(p.bats||"?")+"/"+esc(p.throws||"?"):""}</div><h2>${esc(p.f)} ${esc(p.l)}</h2>
+   <div class="cues"><span class="cue blue"><b>Fridays</b>${rows.filter(r=>r.here).length} of ${WEEKS.length}</span>${s.pitches?`<span class="cue"><b>Season K%</b>${sp}% on ${s.pitches} pitches</span>`:""}${best("Home to 1st (sec)",-1)!=null?`<span class="cue blue"><b>Best H→1</b>${best("Home to 1st (sec)",-1)} s</span>`:""}${best("Max exit velo (mph)",1)!=null?`<span class="cue blue"><b>Best EV</b>${best("Max exit velo (mph)",1)} mph</span>`:""}</div></div>
+  <section class="panel"><div class="panel-head"><h3>Week by week</h3></div>
+   <div class="scroll"><table class="data"><thead><tr><th>Week</th><th>Here</th><th>Pitches</th><th>K%</th><th>1st K</th><th>EV</th><th>LD%</th><th>30 yd</th><th>H→1</th><th>Broad</th><th>Plank</th></tr></thead><tbody>${rows.map(r=>`<tr>${r.cells}</tr>`).join("")}</tbody></table></div>
+   ${cues.length?`<p class="hint" style="margin-top:12px"><b>Pitching cues:</b> ${cues.map(r=>`Wk ${weekIdx(r.Week)+1}: ${esc(r.Cue)}`).join(" · ")}</p>`:""}
+   <p class="hint" style="margin-top:8px">Fills in automatically every Friday from attendance, the bullpen charter and test results.</p></section>
+  <section class="panel"><div class="panel-head"><h3>Positions</h3></div>
+   <div class="edit">${sel("ed-pos1",POS,pd("pos1",p),"Primary")}${sel("ed-pos2",POS,pd("pos2",p),"Secondary")}${sel("ed-bats",["R","L","S"],pd("bats",p),"Bats")}${sel("ed-throws",["R","L"],pd("throws",p),"Throws")}</div>
+   <div class="row" style="margin-top:12px"><button class="btn" id="psave" data-num="${p.n}">Save</button><span class="hint" style="margin:0">Choosing P puts him in the bullpen and spreads him across groups.</span></div></section>`;
 }
 function render(){
   renderTabs();
   const app=$("#app");
-  app.innerHTML=current==="season"?seasonView():weekView(WEEKS.find(w=>w.id===current),WEEKS.findIndex(w=>w.id===current));
+  app.innerHTML=current==="season"?seasonView():isTeam()?teamView():weekView(WEEKS.find(w=>w.id===current),WEEKS.findIndex(w=>w.id===current));
   updateSync();
 }
 function busy(){const a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT"||a.tagName==="SELECT")}
@@ -498,10 +635,27 @@ document.addEventListener("click",e=>{
     send({action:"bullpen",week:w.id,date:w.date,num:Number(penPitcher),pitches:s.pitches,strikes:s.strikes,batters:s.batters,fps:s.fps,ahead:s.ahead,ch:s.ch,chStrikes:s.chS,cue:($("#pencue")||{}).value||""}).then(ok=>{if(ok)toast("Pen saved to the team sheet");else render()});return}
   const ts=e.target.closest("[data-savetest]");
   if(ts&&w){const num=ts.dataset.savetest,g=k=>{const el=document.getElementById(`t-${w.id}-${num}-${k}`);const v=el?el.value.trim():"";return v===""?"":Number(v)};
-    const body={action:"test",week:w.id,date:w.date,num:Number(num),ev:g("ev"),ld:g("ld"),sprint:g("sprint"),broad:g("broad"),plank:g("plank")};
-    if([body.ev,body.ld,body.sprint,body.broad,body.plank].some(v=>v!==""&&isNaN(v))){toast("Numbers only in test boxes");return}
-    ts.textContent="Saving…";ts.disabled=true;send(body).then(ok=>{if(ok)toast("Saved #"+num+"'s numbers")});return}
+    const body={action:"test",week:w.id,date:w.date,num:Number(num),ev:g("ev"),ld:g("ld"),sprint:g("sprint"),broad:g("broad"),plank:g("plank"),h1:g("h1")};
+    if([body.ev,body.ld,body.sprint,body.broad,body.plank,body.h1].some(v=>v!==""&&isNaN(v))){toast("Numbers only in test boxes");return}
+    ts.textContent="Saving…";ts.disabled=true;send(body).then(ok=>{if(ok){if(drafts[w.id])delete drafts[w.id][num];toast("Saved #"+num+"'s numbers")}else render()});return}
 });
+document.addEventListener("click",e=>{
+  if(e.target.id==="swbtn"){const w=WEEKS.find(x=>x.id===current);if(!w)return;
+    if(!sw.running){sw.running=true;sw.start=performance.now();sw.elapsed=0;e.target.textContent="Stop";e.target.classList.add("run");tickSW()}
+    else{sw.running=false;sw.elapsed=performance.now()-sw.start;const t=(sw.elapsed/1000).toFixed(2);
+      setDraft(w.id,sw.who,"h1",t);const inp=document.getElementById(`t-${w.id}-${sw.who}-h1`);if(inp)inp.value=t;
+      e.target.textContent="Start";e.target.classList.remove("run");tickSW();toast("#"+sw.who+": "+t+" sec. Tap Save on his row.")}
+    return}
+  if(e.target.id==="psave"){const num=Number(e.target.dataset.num),g=id=>(document.getElementById(id)||{}).value||"";
+    const R=roster(),me=R.find(p=>p.n===num)||{};
+    const body={action:"player",num,pos1:g("ed-pos1"),pos2:g("ed-pos2"),bats:g("ed-bats"),throws:g("ed-throws"),pitcher:me.p&&me.pos1!=="P"&&me.pos2!=="P"?true:false};
+    D.roster=D.roster.map(r=>Number(r.Number)===num?{...r,Primary:body.pos1,Secondary:body.pos2,Bats:body.bats,Throws:body.throws}:r);
+    e.target.textContent="Saving…";e.target.disabled=true;
+    send(body).then(ok=>{if(ok)delete pdraft[num];toast(ok?"Saved":"Didn't save");render()});return}
+});
+document.addEventListener("change",e=>{const m=/^ed-(pos1|pos2|bats|throws)$/.exec(e.target.id||"");if(m){const n=Number(current.slice(7));pdraft[n]=pdraft[n]||{};pdraft[n][m[1]]=e.target.value}});
+document.addEventListener("change",e=>{if(e.target.id==="swwho"){sw.who=e.target.value;sw.elapsed=0;e.target.blur();const t=document.getElementById("sw-time");if(t)t.textContent="0.00"}});
+document.addEventListener("input",e=>{const d=e.target.dataset&&e.target.dataset.draft;if(d){const[wid,num,k]=d.split("|");setDraft(wid,num,k,e.target.value)}});
 // strikes so far in the current at-bat
 function countStrikes(log){let k=0;for(let i=log.length-1;i>=0;i--){k+=log[i].r==="S"?1:0;if(i===0||log[i].nb)break}return k}
 document.addEventListener("change",e=>{if(e.target.id==="penwho"){penPitcher=e.target.value;LS.set("ma_pen_pitcher",penPitcher);e.target.blur();render()}});
