@@ -35,12 +35,33 @@ header.top .inner{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-a
 .brand h1{font-family:var(--display);font-weight:800;font-size:clamp(19px,5.5vw,24px);white-space:nowrap;letter-spacing:.02em;text-transform:uppercase;margin:0;line-height:1.1}
 .brand h1 span{color:#ff4d63}
 .sync{font-size:12px;opacity:.75;white-space:nowrap;font-family:var(--mono)}
-nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:10px 0;scrollbar-width:none}
-nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs a{flex:0 0 auto;text-decoration:none;color:inherit;opacity:.7;padding:8px 12px 10px;border-radius:8px 8px 0 0;font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
-nav.tabs a small{display:block;font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:0;text-transform:none;margin-top:3px;opacity:.85}
-nav.tabs a[aria-current="page"]{opacity:1;background:var(--bg);color:var(--ink)}
+/* Section nav: bottom bar on phones, top-right pills on wide screens */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;display:grid;grid-template-columns:repeat(4,1fr);background:#14202e;border-top:1px solid #273443;padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-block:6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:#93a1b0;font-weight:700;font-size:11px;letter-spacing:.02em;padding:6px 0;border-radius:10px;min-height:48px;justify-content:center}
+nav.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs a[aria-current="page"]{color:#fff}
+nav.tabs a[aria-current="page"] svg{stroke:#ff4d63}
 nav.tabs a:focus-visible{outline:2px solid var(--now);outline-offset:-2px}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+@media (min-width:760px){
+  nav.tabs{top:calc(env(safe-area-inset-top,0px) + 6px);bottom:auto;left:auto;right:max(16px,calc((100vw - 860px)/2 + 16px));z-index:9;background:transparent;border:0;padding:0;display:flex;gap:4px}
+  nav.tabs a{flex-direction:row;gap:6px;font-size:14px;padding:8px 12px;min-height:0}
+  nav.tabs svg{width:18px;height:18px}
+  nav.tabs a[aria-current="page"]{background:rgba(255,255,255,.1)}
+  body{padding-bottom:env(safe-area-inset-bottom,0px)}
+  .sync{display:none}
+}
+header.top .inner{padding-block:12px}
+/* Week picker */
+.wkpick{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:14px}
+.wkpick a{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 2px;border-radius:10px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);background:var(--card)}
+.wkpick b{font-family:var(--display);font-size:16px;text-transform:uppercase;line-height:1}
+.wkpick span{font-size:11px;color:var(--muted)}
+.wkpick a.past{opacity:.75}
+.wkpick a.today{border-color:var(--apple)} .wkpick a.today span{color:var(--apple);font-weight:700}
+.wkpick a[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--bg);opacity:1}
+.wkpick a[aria-current="page"] span{color:inherit;opacity:.8}
+@media (max-width:380px){.wkpick b{font-size:14px}.wkpick span{font-size:10px}}
 
 .hero{padding-block:20px 6px}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--apple);font-weight:700}
@@ -156,7 +177,7 @@ table.ref th{font-family:var(--mono);font-size:11px;color:var(--muted);text-tran
 .lock form{display:flex;gap:8px;flex-wrap:wrap}
 .lock input{flex:1 1 140px;font-size:16px}
 .err{color:var(--apple);font-size:13px;font-weight:600;margin:8px 0 0}
-.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14202e;color:#f3f5f7;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#14202e;color:#f3f5f7;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
 
 /* Boards */
 .boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 12px}
@@ -226,9 +247,10 @@ ol.lb li.r1 b{color:var(--apple)}
 <body>
 <header class="top"><div class="inner">
   <div class="brand"><h1>Mad Apple <span>Winter</span></h1><span class="sync" id="sync"></span></div>
-  <nav class="tabs" id="tabs" aria-label="Weeks"></nav>
+  
 </div></header>
 <main class="wrap" id="app"></main>
+<nav class="tabs" id="tabs" aria-label="Sections"></nav>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -358,17 +380,22 @@ function updateSync(){const s=$("#sync");if(!s)return;
 
 /* ---------- Routing ---------- */
 function defaultTab(){const t=todayStr();const w=WEEKS.find(w=>w.date>=t);return w?w.id:"w6"}
-function route(){const h=location.hash.slice(1);current=(h==="season"||h==="boards"||h==="team"||h==="field"||h==="bullpen"||/^player-\d+$/.test(h)||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
+function route(){let h=location.hash.slice(1);if(h==="practice")h=defaultTab();current=(h==="season"||h==="boards"||h==="team"||h==="field"||h==="bullpen"||/^player-\d+$/.test(h)||WEEKS.some(w=>w.id===h))?h:defaultTab();render();window.scrollTo(0,0)}
 const isTeam=()=>current==="team"||current==="field"||current==="bullpen"||/^player-/.test(current);
 
 /* ---------- Views ---------- */
+const ICON={"practice": "<path d=\"M4 6h16v14H4z M4 10h16 M8 3v5 M16 3v5\"/>", "team": "<circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6\"/><circle cx=\"17\" cy=\"9\" r=\"2.5\"/><path d=\"M15.5 14.3c3 .2 5.5 2.3 5.5 5.7\"/>", "boards": "<path d=\"M7 4h10v5a5 5 0 0 1-10 0z M7 6H4v1a3 3 0 0 0 3 3 M17 6h3v1a3 3 0 0 1-3 3 M12 14v3 M8 20h8 M9 17h6\"/>", "season": "<path d=\"M4 20V4 M4 20h16 M8 16l4-5 3 3 5-6\"/>"};
+let lastWeek=null;
 function renderTabs(){
-  const t=$("#tabs");
-  t.innerHTML=WEEKS.map((w,i)=>`<a href="#${w.id}" ${current===w.id?'aria-current="page"':""}>Wk ${i+1}<small>${w.label}</small></a>`).join("")+
-   `<a href="#team" ${isTeam()?'aria-current="page"':""}>Team<small>Roster</small></a>`+
-   `<a href="#boards" ${current==="boards"?'aria-current="page"':""}>Boards<small>Leaders</small></a>`+
-   `<a href="#season" ${current==="season"?'aria-current="page"':""}>Season<small>Progress</small></a>`;
-  const a=t.querySelector('[aria-current]'); if(a) a.scrollIntoView({block:"nearest",inline:"center"});
+  const t=$("#tabs"), isWeek=WEEKS.some(w=>w.id===current);
+  if(isWeek) lastWeek=current;
+  const tab=(href,key,label,on)=>`<a href="#${href}" ${on?'aria-current="page"':""}><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[key]}</svg><span>${label}</span></a>`;
+  t.innerHTML=tab(lastWeek||defaultTab(),"practice","Practice",isWeek)+tab("team","team","Team",isTeam())+tab("boards","boards","Boards",current==="boards")+tab("season","season","Season",current==="season");
+}
+function weekPicker(cur){
+  const t=todayStr();
+  return `<nav class="wkpick" aria-label="Choose a Friday">${WEEKS.map((w,i)=>{const st=w.date===t?"today":w.date<t?"past":"next";
+    return `<a href="#${w.id}" class="${st}" ${w.id===cur?'aria-current="page"':""}><b>Wk ${i+1}</b><span>${st==="today"?"Today":w.label}</span></a>`}).join("")}</nav>`;
 }
 function lockPanel(){
   if(!URL_) return `<section class="panel lock"><h3>Not connected yet</h3><p class="hint" style="margin-top:8px">The practice plan works below. Attendance and stats turn on once the team sheet's web address is added to config.js.</p></section>`;
@@ -473,6 +500,7 @@ function weekView(w,idx){
   const nowM=(w.date===todayStr())?new Date().getHours()*60+new Date().getMinutes():-1;
   const modeLabel=n===0?"Tap players as they arrive":m===3?"3 groups · 3 stations":m===2?"2 groups · 2 stations":"1 group · everyone together";
   return `
+  ${weekPicker(w.id)}
   <div class="hero"><div class="eyebrow">Week ${idx+1} · Friday ${w.label} · 6–8 pm</div><h2>${esc(w.theme)}</h2><p>${esc(w.focus)}</p>
    <div class="cues"><span class="cue"><b>Cue of the night</b>${esc(w.cue)}</span><span class="cue blue"><b>Pitch cap</b>${esc(w.cap)}</span></div></div>
   ${lockPanel()}
