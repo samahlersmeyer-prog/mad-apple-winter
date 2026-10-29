@@ -160,7 +160,7 @@ table.ref th{font-family:var(--mono);font-size:11px;color:var(--muted);text-tran
 @media (max-width:480px){.blk{grid-template-columns:1fr;gap:6px}.time small{display:inline;margin-left:6px}.scoreboard{grid-template-columns:repeat(2,1fr)}}
 @media (prefers-reduced-motion:no-preference){.chip,.pp{transition:background .12s,color .12s,transform .08s}.pp:active{transform:scale(.97)}}
 </style>
-<script src="config.js"></script>
+<script src="config.js?v=2"></script>
 </head>
 <body>
 <header class="top"><div class="inner">
@@ -229,7 +229,8 @@ const STN={P:{c:"p",name:"Pitching",lead:"Coach Justice · pitching lanes"},H:{c
 const ROT={A:["P","H","D"],B:["H","D","P"],C:["D","P","H"]};
 
 /* ---------- State ---------- */
-const URL_=(window.MA_CONFIG&&window.MA_CONFIG.scriptUrl||"").trim();
+const SHEET_URL="https://script.google.com/macros/s/AKfycbyxA6fmHDMrR6fYHqbOjd626KgI1zojYsl3G2zA-9qLIqXTA6aYYewhLIO3t-CUi8mP8Q/exec";
+const URL_=((window.MA_CONFIG&&window.MA_CONFIG.scriptUrl)||SHEET_URL).trim();
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 let pin=LS.get("ma_pin")||"";
 let D=null;            // data from the Sheet
