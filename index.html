@@ -201,6 +201,57 @@ ol.lb li.r1 b{color:var(--apple)}
 .prlist b{color:var(--turf);font-family:var(--mono)}
 .prlist small{color:var(--muted);font-size:12px}
 .ptog:disabled{cursor:default;opacity:.8}
+/* Player card */
+.cardwrap{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:16px;align-items:center;margin-top:12px}
+@media (max-width:600px){.cardwrap{grid-template-columns:1fr}}
+.pcard{--c1:#8a5a2b;--c2:#d9a066;--fg:#fff;border-radius:18px;padding:16px;color:var(--fg);background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:0 8px 24px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.pcard::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%);pointer-events:none}
+.pcard.silver{--c1:#5f6b78;--c2:#c9d2dc}
+.pcard.gold{--c1:#9a6b00;--c2:#f2c94c;--fg:#1d1500}
+.pcard.diamond{--c1:#1d4e89;--c2:#7fe0f0;--fg:#fff}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start}
+.ovr{font-family:var(--display);font-size:64px;font-weight:800;line-height:.85;font-variant-numeric:tabular-nums}
+.ovr-l{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.2em;opacity:.85}
+.pc-id{text-align:right;display:flex;flex-direction:column;gap:2px}
+.pc-pos{font-family:var(--display);font-size:28px;font-weight:800;line-height:1}
+.pc-num{font-family:var(--mono);font-weight:700;opacity:.85}
+.pc-name{font-family:var(--display);font-size:26px;font-weight:800;text-transform:uppercase;margin-top:10px;line-height:1}
+.pc-tier{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;opacity:.8;margin-top:2px}
+.attrs{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:12px}
+.attr{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:2px 8px;position:relative;padding-bottom:5px}
+.attr span{font-family:var(--mono);font-size:12px;font-weight:700;opacity:.85}
+.attr b{font-family:var(--display);font-size:20px;text-align:right;font-variant-numeric:tabular-nums}
+.attr i{position:absolute;left:0;bottom:0;height:3px;border-radius:2px;background:currentColor;opacity:.7}
+.attr.na{opacity:.5}
+.linkbtn{font:inherit;background:none;border:0;color:var(--apple);text-decoration:underline;cursor:pointer;padding:0}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.bdg{display:flex;flex-direction:column;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);text-decoration:none;color:var(--ink);min-width:0}
+.bdg b{font-family:var(--display);font-size:16px;text-transform:uppercase;letter-spacing:.02em;line-height:1.1}
+.bdg small{font-size:11px;color:var(--muted)}
+.bdg.on{background:var(--apple-soft);border-color:var(--apple);color:var(--apple)} .bdg.on small{color:var(--ink);opacity:.8}
+.bwall{display:flex;flex-direction:column}
+.bw-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line);align-items:center}
+.bw-row:last-child{border-bottom:0}
+.bw-row b{font-family:var(--display);font-size:16px;text-transform:uppercase;display:block;line-height:1.1}
+.bw-row small{font-size:11px;color:var(--muted)}
+.bw-who{display:flex;flex-wrap:wrap;gap:4px}
+.bw-who a{font-size:12px;font-weight:700;text-decoration:none;color:var(--apple);background:var(--apple-soft);padding:3px 8px;border-radius:99px}
+.bw-who a.me{background:var(--now);color:#14202e}
+.bdg.off{border-style:dashed;opacity:.7}
+.mystrip{display:flex;align-items:center;gap:14px;margin-top:16px;padding:12px 16px;border-radius:14px;text-decoration:none;color:#fff;background:linear-gradient(120deg,#8a5a2b,#d9a066);font-size:22px}
+.mystrip.silver{background:linear-gradient(120deg,#5f6b78,#c9d2dc)} .mystrip.gold{background:linear-gradient(120deg,#9a6b00,#f2c94c);color:#1d1500} .mystrip.diamond{background:linear-gradient(120deg,#1d4e89,#7fe0f0)}
+.ms-ovr{font-family:var(--display);font-size:40px;font-weight:800;line-height:1}
+.ms-t{flex:1;min-width:0;font-size:15px} .ms-t b{display:block} .ms-t small{opacity:.85;font-size:12px}
+ol.lb li.me{background:var(--now);margin:0 -8px;padding-inline:8px;border-radius:8px}
+ol.lb li.me a,ol.lb li.me b,ol.lb li.me small{color:#14202e}
+#pickme{width:100%;font-size:16px}
+/* Live banner */
+.live-bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:4;display:flex;align-items:center;gap:12px;margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--now);color:#14202e;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.lb-dot{width:10px;height:10px;border-radius:50%;background:var(--apple);flex:0 0 auto}
+@media (prefers-reduced-motion:no-preference){.lb-dot{animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.25}}}
+.lb-txt{flex:1;min-width:0;font-size:14px;line-height:1.3} .lb-txt small{display:block;font-size:12px;opacity:.8}
+.lb-t{font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.live-bar.soon{background:var(--apple);color:#fff}
 /* Team tab */
 .subnav{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .subnav a{text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;padding:8px 14px;border-radius:99px;border:1.5px solid var(--line)}
@@ -500,7 +551,7 @@ function weekView(w,idx){
   const nowM=(w.date===todayStr())?new Date().getHours()*60+new Date().getMinutes():-1;
   const modeLabel=n===0?"Tap players as they arrive":m===3?"3 groups · 3 stations":m===2?"2 groups · 2 stations":"1 group · everyone together";
   return `
-  ${weekPicker(w.id)}
+  ${liveHTML()}${weekPicker(w.id)}
   <div class="hero"><div class="eyebrow">Week ${idx+1} · Friday ${w.label} · 6–8 pm</div><h2>${esc(w.theme)}</h2><p>${esc(w.focus)}</p>
    <div class="cues"><span class="cue"><b>Cue of the night</b>${esc(w.cue)}</span><span class="cue blue"><b>Pitch cap</b>${esc(w.cap)}</span></div></div>
   ${lockPanel()}
@@ -620,7 +671,7 @@ function teamView(){
   }
   const att=n=>WEEKS.filter(w=>presentNums(w.id).has(n)).length;
   return head+`<section class="panel"><div class="panel-head"><h3>Roster</h3><span class="count">${R.length} players</span></div>
-   <div class="plist">${R.map(p=>`<a class="prow" href="#player-${p.n}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}<small>${[p.bats||p.throws?`B/T ${esc(p.bats||"?")}/${esc(p.throws||"?")}`:"",`${att(p.n)} of ${WEEKS.length} Fridays`].filter(Boolean).join(" · ")}</small></span><span class="pos">${posBadges(p)}</span></a>`).join("")}</div>
+   <div class="plist">${R.map(p=>`<a class="prow" href="#player-${p.n}"><span class="num">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}${String(p.n)===me?' <span class="tag">YOU</span>':""}<small>${[p.bats||p.throws?`B/T ${esc(p.bats||"?")}/${esc(p.throws||"?")}`:"",`${att(p.n)} of ${WEEKS.length} Fridays`].filter(Boolean).join(" · ")}</small></span><span class="pos">${posBadges(p)}</span></a>`).join("")}</div>
    <p class="hint" style="margin-top:10px">Tap a player to set positions, bats/throws, and see his history.</p></section>`;
 }
 let pdraft={};
@@ -636,7 +687,11 @@ function playerView(n){
   const best=(col,dir)=>{const v=(D.tests||[]).filter(r=>Number(r.Number)===n).map(r=>num(r[col])).filter(v=>v!=null);return v.length?(dir<0?Math.min(...v):Math.max(...v)):null};
   const cues=s.rs.filter(r=>r.Cue);
   return `<a class="back" href="#team">← Roster</a>
-  <div class="hero" style="padding-top:8px"><div class="eyebrow">#${p.n}${p.pos1?" · "+esc(p.pos1):""}${p.pos2?" / "+esc(p.pos2):""}${p.bats||p.throws?" · B/T "+esc(p.bats||"?")+"/"+esc(p.throws||"?"):""}</div><h2>${esc(p.f)} ${esc(p.l)}</h2>
+  <div class="cardwrap">${cardHTML(p)}<div class="cardside">
+   ${String(p.n)===me?`<p class="hint" style="margin:0">This is you. <button class="linkbtn" id="notme">Not you?</button></p>`:`<button class="btn ghost" id="isme" data-num="${p.n}">This is me</button>`}
+   <p class="hint" style="margin:10px 0 0">Ratings run 60–99 and only go up as you set new bests. Hustle counts every Friday you show up, and Growth counts every personal record.</p></div></div>
+  <section class="panel"><div class="panel-head"><h3>Badges</h3><span class="count">${BADGES.filter(b=>b.test(p)).length}/${BADGES.length}</span></div>${badgesHTML(p,true)}</section>
+  <div class="hero" style="padding-top:8px"><div class="eyebrow">#${p.n}${p.pos1?" · "+esc(p.pos1):""}${p.pos2?" / "+esc(p.pos2):""}${p.bats||p.throws?" · B/T "+esc(p.bats||"?")+"/"+esc(p.throws||"?"):""}</div><h2 style="font-size:28px">${esc(p.f)}'s numbers</h2>
    <div class="cues"><span class="cue blue"><b>Fridays</b>${rows.filter(r=>r.here).length} of ${WEEKS.length}</span>${s.pitches?`<span class="cue"><b>Season K%</b>${sp}% on ${s.pitches} pitches</span>`:""}${best("Home to 1st (sec)",-1)!=null?`<span class="cue blue"><b>Best H→1</b>${best("Home to 1st (sec)",-1)} s</span>`:""}${best("Max exit velo (mph)",1)!=null?`<span class="cue blue"><b>Best EV</b>${best("Max exit velo (mph)",1)} mph</span>`:""}</div></div>
   <section class="panel"><div class="panel-head"><h3>Week by week</h3></div>
    <div class="scroll"><table class="data"><thead><tr><th>Week</th><th>Here</th><th>Pitches</th><th>K%</th><th>1st K</th><th>EV</th><th>LD%</th><th>30 yd</th><th>H→1</th><th>Broad</th><th>Plank</th></tr></thead><tbody>${rows.map(r=>`<tr>${r.cells}</tr>`).join("")}</tbody></table></div>
@@ -646,6 +701,66 @@ function playerView(n){
    <div class="edit">${sel("ed-pos1",POS,pd("pos1",p),"Primary")}${sel("ed-pos2",POS,pd("pos2",p),"Secondary")}${sel("ed-bats",["R","L","S"],pd("bats",p),"Bats")}${sel("ed-throws",["R","L"],pd("throws",p),"Throws")}</div>
    <div class="row" style="margin-top:12px"><button class="btn" id="psave" data-num="${p.n}">Save</button><span class="hint" style="margin:0">Choosing P puts him in the bullpen and spreads him across groups.</span></div></section>`:""}`;
 }
+/* ---------- Player card: video-game style ratings (60-99). Effort and growth count. ---------- */
+let me=LS.get("ma_me")||"";
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const scale=(v,lo,hi)=>v==null?null:Math.round(60+39*clamp((v-lo)/(hi-lo),0,1));
+function bestOf(n,col,dir){const s=series(n,col);return s.length?s.reduce((a,x)=>better(x.v,a,dir)?x.v:a,s[0].v):null}
+function prCount(n){let c=0;METRICS.forEach(m=>{const s=series(n,m.col);s.forEach((x,i)=>{if(i>0&&s.slice(0,i).every(y=>better(x.v,y.v,m.dir)))c++})});return c}
+function weeksSoFar(){const t=todayStr();return Math.max(1,WEEKS.filter(w=>w.date<=t).length)}
+function rating(p){
+  const ps=pitcherSeason(p.n);
+  const spdParts=[scale(bestOf(p.n,"Home to 1st (sec)",-1),5.3,4.2),scale(bestOf(p.n,"30-yd sprint (sec)",-1),5.6,4.3)].filter(v=>v!=null);
+  const r={
+    POW:scale(bestOf(p.n,"Max exit velo (mph)",1),55,82),
+    CON:scale(bestOf(p.n,"Line-drive %",1),15,65),
+    SPD:spdParts.length?Math.round(spdParts.reduce((a,b)=>a+b,0)/spdParts.length):null,
+    CMD:ps.pitches>=15?scale(pct(ps.strikes,ps.pitches),40,70):null,
+    HUS:Math.round(60+39*clamp(WEEKS.filter(w=>presentNums(w.id).has(p.n)).length/weeksSoFar(),0,1)),
+    GRW:Math.min(99,60+8*prCount(p.n))
+  };
+  const vals=Object.values(r).filter(v=>v!=null);
+  r.OVR=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  return r;
+}
+const TIER=o=>o>=90?"diamond":o>=80?"gold":o>=70?"silver":"bronze";
+const ATTR={POW:"Power · best exit velo",CON:"Contact · line-drive %",SPD:"Speed · home to 1st + 30 yd",CMD:"Command · strike %",HUS:"Hustle · Fridays here",GRW:"Growth · personal records"};
+function cardHTML(p){
+  const r=rating(p),t=TIER(r.OVR);
+  return `<div class="pcard ${t}"><div class="pc-top"><div><div class="ovr">${r.OVR}</div><div class="ovr-l">OVR</div></div><div class="pc-id"><span class="pc-pos">${esc(p.pos1||"UT")}</span><span class="pc-num">#${p.n}</span></div></div>
+   <div class="pc-name">${esc(p.f)} ${esc(p.l)}</div><div class="pc-tier">${t} card</div>
+   <div class="attrs">${["POW","CON","SPD","CMD","HUS","GRW"].map(k=>`<div class="attr ${r[k]==null?"na":""}" title="${ATTR[k]}"><span>${k}</span><b>${r[k]==null?"–":r[k]}</b><i style="width:${r[k]==null?0:(r[k]-50)*2}%"></i></div>`).join("")}</div></div>`;
+}
+const BADGES=[
+ {id:"iron",name:"Iron Man",how:"Every Friday so far",test:p=>WEEKS.filter(w=>presentNums(w.id).has(p.n)).length>=weeksSoFar()&&WEEKS.some(w=>w.date<=todayStr())},
+ {id:"strike",name:"Strike Thrower",how:"A pen at 60%+ strikes",test:p=>pitcherSeason(p.n).rs.some(r=>num(r.Pitches)>=10&&num(r["Strike %"])>=60)},
+ {id:"ahead",name:"Ahead Early",how:"60%+ first-pitch strikes on the season",test:p=>{const s=pitcherSeason(p.n);return s.batters>=6&&pct(s.fps,s.batters)>=60}},
+ {id:"change",name:"Change of Pace",how:"Half your changeups for strikes",test:p=>{const s=pitcherSeason(p.n);return s.ch>=5&&s.chS/s.ch>=.5}},
+ {id:"barrel",name:"Barrel",how:"75+ mph exit velo",test:p=>(bestOf(p.n,"Max exit velo (mph)",1)||0)>=75},
+ {id:"wheels",name:"Wheels",how:"Home to 1st under 4.50",test:p=>{const v=bestOf(p.n,"Home to 1st (sec)",-1);return v!=null&&v<4.5}},
+ {id:"grind",name:"Grinder",how:"Plank 2 minutes",test:p=>(bestOf(p.n,"Plank (sec)",1)||0)>=120},
+ {id:"pr1",name:"New Best",how:"Set your first personal record",test:p=>prCount(p.n)>=1},
+ {id:"pr3",name:"Glow-Up",how:"3 personal records",test:p=>prCount(p.n)>=3}
+];
+function badgesHTML(p,showLocked){
+  const got=BADGES.filter(b=>b.test(p)),locked=BADGES.filter(b=>!b.test(p));
+  return `<div class="badges">${got.map(b=>`<span class="bdg on"><b>${b.name}</b><small>${b.how}</small></span>`).join("")}${showLocked?locked.map(b=>`<span class="bdg off"><b>${b.name}</b><small>${b.how}</small></span>`).join(""):""}</div>`;
+}
+/* ---------- Live practice banner (practice day, 5:50–8:00) ---------- */
+function liveState(){
+  const w=WEEKS.find(x=>x.date===todayStr());if(!w)return null;
+  const d=new Date(),m=d.getHours()*60+d.getMinutes()+d.getSeconds()/60;
+  const i=BLOCKS.findIndex(b=>m>=toMin(b.s)&&m<toMin(b.e));if(i<0)return null;
+  const b=BLOCKS[i];let end=toMin(b.e),title=b.name,next=BLOCKS[i+1]?BLOCKS[i+1].name:"Done";
+  if(b.k==="stations"){const n=presentNums(w.id).size,mode=modeFor(n||13),len=mode===2?30:20,k=Math.floor((m-toMin(b.s))/len);
+    end=toMin(b.s)+(k+1)*len;title=mode===3?`Rotation ${k+1} of 3`:mode===2?`Station ${k+1} of 2`:`Block ${k+1} of 3`;
+    if(mode===3)title+=": "+["A","B","C"].map(g=>g+" "+STN[ROT[g][k]].name).join(" · ");
+    next=k+1<(mode===2?2:3)?"Rotate":"Conditioning"}
+  return {w,title,next,left:Math.max(0,(end-m)*60)};
+}
+function liveHTML(){const L=liveState();if(!L)return "";const mm=Math.floor(L.left/60),ss=Math.floor(L.left%60);
+  return `<div class="live-bar" id="livebar"><span class="lb-dot"></span><div class="lb-txt"><b>Now:</b> ${esc(L.title)}<small>Next: ${esc(L.next)}</small></div><span class="lb-t" id="lbt">${mm}:${String(ss).padStart(2,"0")}</span></div>`}
+setInterval(()=>{const el=document.getElementById("lbt");const L=liveState();if(el&&L){el.textContent=Math.floor(L.left/60)+":"+String(Math.floor(L.left%60)).padStart(2,"0");if(L.left<60)el.parentElement.classList.add("soon");else el.parentElement.classList.remove("soon")}else if(WEEKS.some(w=>w.id===current)&&!!L!==!!document.getElementById("livebar"))safeRender()},1000);
 const METRICS=[
  {col:"Max exit velo (mph)",name:"Exit velo",unit:"mph",dir:1},
  {col:"Home to 1st (sec)",name:"Home to 1st",unit:"s",dir:-1},
@@ -662,12 +777,17 @@ function ranked(items,dir){ // items: [{p,v,label}] -> sorted with shared ranks,
 }
 function boardCard(title,sub,items,fmtv){
   return `<section class="panel board"><div class="panel-head"><h3>${title}</h3><span class="hint" style="margin:0">${sub}</span></div>
-   ${items.length?`<ol class="lb">${items.map(it=>`<li class="r${Math.min(it.rank,4)}"><span class="rk">${it.rank}</span><a href="#player-${it.p.n}">${esc(it.p.f)} ${esc(it.p.l[0]||"")}.<small>#${it.p.n}</small></a><b>${fmtv(it)}</b></li>`).join("")}</ol>`:`<p class="empty">No numbers yet. Log some on a Friday tab.</p>`}</section>`;
+   ${items.length?`<ol class="lb">${items.map(it=>`<li class="r${Math.min(it.rank,4)}${String(it.p.n)===me?" me":""}"><span class="rk">${it.rank}</span><a href="#player-${it.p.n}">${esc(it.p.f)} ${esc(it.p.l[0]||"")}.<small>${String(it.p.n)===me?"YOU":"#"+it.p.n}</small></a><b>${fmtv(it)}</b></li>`).join("")}</ol>`:`<p class="empty">No numbers yet. Log some on a Friday tab.</p>`}</section>`;
 }
 function boardsView(){
   const head=`<div class="hero"><div class="eyebrow">Mad Apple · winter 2026</div><h2>Leaderboards</h2><p>Top five in every test, plus the biggest jumps since your first try. Everybody can win the improvement boards.</p></div>`;
   if(!(D&&pin)) return head+lockPanel();
   const R=roster(), out=[];
+  const mine=R.find(p=>String(p.n)===me);
+  if(mine){const r=rating(mine),nb=BADGES.filter(b=>b.test(mine)).length;out.push(`<a class="mystrip ${TIER(r.OVR)}" href="#player-${mine.n}"><span class="ms-ovr">${r.OVR}</span><span class="ms-t"><b>${esc(mine.f)}, your card</b><small>${nb} of ${BADGES.length} badges · tap to see what's next</small></span><span aria-hidden="true">›</span></a>`)}
+  else out.push(`<section class="panel"><div class="panel-head"><h3>Which one is you?</h3></div><p class="hint">Pick yourself once. This phone will remember, highlight you on every board, and show your player card.</p><select id="pickme" aria-label="Pick yourself"><option value="">Choose your name</option>${R.map(p=>`<option value="${p.n}">#${p.n} ${esc(p.f)} ${esc(p.l)}</option>`).join("")}</select></section>`);
+  const earned=[];R.forEach(p=>BADGES.forEach(b=>{if(b.test(p))earned.push({p,b})}));
+  if(earned.length) out.push(`<section class="panel"><div class="panel-head"><h3>Badge wall</h3><span class="count">${earned.length} earned</span></div><div class="bwall">${BADGES.map(b=>{const who=earned.filter(x=>x.b===b);return `<div class="bw-row"><div><b>${b.name}</b><small>${b.how}</small></div><div class="bw-who">${who.length?who.map(x=>`<a href="#player-${x.p.n}" class="${String(x.p.n)===me?"me":""}">${esc(x.p.f)} ${esc(x.p.l[0]||"")}.</a>`).join(""):'<span class="hint" style="margin:0">Nobody yet</span>'}</div></div>`}).join("")}</div></section>`);
   // PRs from the most recent week with any test data
   const weeksWithData=[...new Set((D.tests||[]).map(r=>weekIdx(r.Week)).filter(i=>i>=0))].sort((a,b)=>b-a);
   const lw=weeksWithData[0];
@@ -745,7 +865,10 @@ document.addEventListener("click",e=>{
     if(TCOLS.some(c=>rec[c[1]]!==""&&isNaN(rec[c[1]]))){toast("Numbers only in test boxes");return}
     ts.textContent="Saving…";ts.disabled=true;save("Tests",["Week","Number"],rec,"merge").then(ok=>{if(ok){if(drafts[w.id])delete drafts[w.id][num];toast("Saved #"+num+"'s numbers")}else render()});return}
 });
+document.addEventListener("change",e=>{if(e.target.id==="pickme"&&e.target.value){me=e.target.value;LS.set("ma_me",me);e.target.blur();render();toast("Got it. You're highlighted on every board.")}});
 document.addEventListener("click",e=>{
+  if(e.target.id==="isme"){me=e.target.dataset.num;LS.set("ma_me",me);render();toast("Saved on this phone");return}
+  if(e.target.id==="notme"){me="";LS.del("ma_me");render();return}
   if(e.target.id==="signout"){pin="";D=null;LS.del("ma_pin");render();return}
   if(e.target.id==="swbtn"){const w=WEEKS.find(x=>x.id===current);if(!w)return;
     if(!sw.running){sw.running=true;sw.start=performance.now();sw.elapsed=0;e.target.textContent="Stop";e.target.classList.add("run");tickSW()}
