@@ -334,7 +334,7 @@ async function load(silent){
   loading=false; safeRender();
 }
 const ERR={pin:"Code rejected. Sign in again.",coach_only:"Only coaches can change that.",exists:"Already saved this week. A coach can change it.",bad_sheet:"That save didn't have a home in the sheet."};
-function shape(j){const d=j.data||{};return {role:j.role||"coach",roster:d.roster||[],attendance:d.attendance||[],bullpens:d.bullpens||[],tests:d.tests||[],notes:d.notes||[]}}
+function shape(j){const d=j.data||j;return {role:j.role||"coach",roster:d.roster||[],attendance:d.attendance||[],bullpens:d.bullpens||[],tests:d.tests||[],notes:d.notes||[]}}
 const isCoach=()=>!!(D&&D.role==="coach");
 function save(sheet,keys,rec,mode){return send({action:"save",sheet,keys,rec,mode:mode||"merge"})}
 let chain=Promise.resolve();
