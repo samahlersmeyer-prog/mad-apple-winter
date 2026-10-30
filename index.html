@@ -226,7 +226,7 @@ details.blk.now{border-color:var(--now);box-shadow:0 0 0 2px var(--now)}
 .pp{font-family:var(--display);font-size:24px;font-weight:800;text-transform:uppercase;border-radius:14px;border:0;padding:12px;min-height:68px}
 .pp.k{background:var(--turf);color:#fff} .pp.b{background:var(--apple);color:#fff}
 .pp.f,.pp.ip{background:var(--sky-soft);color:var(--sky);font-size:20px}
-.pp.nb{background:var(--bg);border:1.5px solid var(--line);font-size:18px;grid-column:span 2}
+.pp.nb{background:var(--bg);border:1.5px solid var(--line);font-size:18px}
 .trail{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;min-height:22px}
 .trail span{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--bg)}
 .trail .s{color:var(--turf)} .trail .bl{color:var(--apple)} .trail .sep{background:transparent;color:var(--muted)}
@@ -360,6 +360,40 @@ table.data th{font-family:var(--mono);font-size:11px;color:var(--muted);text-tra
 details.card summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
 details.card summary::-webkit-details-marker{display:none}
 
+/* Welcome */
+#welcome{position:fixed;inset:0;z-index:35;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#welcome[hidden]{display:none}
+.wz-in{max-width:560px;margin:0 auto}
+.wz-top{background:var(--navy);color:#fff;padding:calc(22px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 24px max(20px,env(safe-area-inset-left,0px))}
+.wz-dots{display:flex;gap:6px;margin-bottom:16px}
+.wz-dots i{width:26px;height:4px;border-radius:2px;background:#33475c}
+.wz-dots i.on{background:#ff4d63}
+.wz-top h1{font-family:var(--display);font-size:clamp(32px,9vw,42px);font-weight:800;line-height:.98;margin:0;text-transform:uppercase;text-wrap:balance}
+.wz-top p{margin:8px 0 0;color:#cfd7df;max-width:46ch}
+.wz-body{max-width:560px;margin:0 auto;padding:6px max(16px,env(safe-area-inset-right,0px)) calc(110px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.wz-h{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+.wz-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.wz-grid.pos{grid-template-columns:repeat(5,1fr)} .wz-grid.three{grid-template-columns:repeat(3,1fr)} .wz-grid.two{grid-template-columns:repeat(2,1fr)}
+.wz-two{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.wz-opt{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:8px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);font-weight:700;font-size:15px}
+.wz-opt.name{justify-content:flex-start;text-align:left;font-weight:600;line-height:1.2}
+.wz-opt .no{font-family:var(--display);font-weight:800;font-size:20px;color:var(--muted);min-width:26px;text-align:center}
+.wz-opt[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.wz-opt[aria-pressed="true"] .no{color:#ff4d63}
+.goals{display:grid;gap:8px;margin-top:16px}
+.goalopt{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card)}
+.goalopt b{font-family:var(--display);font-size:20px;text-transform:uppercase}
+.goalopt small{color:var(--muted);font-size:12px;font-weight:600}
+.goalopt[aria-pressed="true"]{border-color:var(--apple);box-shadow:inset 0 0 0 1.5px var(--apple);background:var(--apple-soft)}
+.wz-body .pcard{margin-top:18px}
+.tips{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:10px}
+.tips li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+.wz-foot{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.wz-foot .btn{flex:1;min-height:52px;font-size:16px}
+.goal{margin-top:12px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--apple);border-radius:12px;padding:10px 12px}
+.goal span{display:block;font-size:11px;font-weight:700;color:var(--apple);text-transform:uppercase;letter-spacing:.06em}
+.goal b{display:block;font-family:var(--display);font-size:20px;text-transform:uppercase;line-height:1.1}
+.goal small{color:var(--muted);font-size:13px}
 /* Sign-in, toast, confetti */
 .lock form{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .lock input{flex:1 1 160px;font-size:16px}
@@ -384,6 +418,7 @@ details.card summary::-webkit-details-marker{display:none}
 </header>
 <main class="wrap" id="app"></main>
 <div id="sheet" hidden></div>
+<div id="welcome" hidden role="dialog" aria-label="Welcome"></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <div id="fx" aria-hidden="true"></div>
 
@@ -402,48 +437,48 @@ const ALL_TESTS=["pen","ev","ld","plank","h1","sprint30","broad"];
 const WEEKS=[
 {id:"w1",date:"2026-10-30",label:"Oct 30",theme:"Baseline",focus:"Measure everything so every kid can see himself improve by December. Set the standard: we hustle between stations and nobody stands.",cue:"Every throw has a target.",cap:"20 pitches · 70% · fastballs only",capN:20,tonight:ALL_TESTS,
  P:{t:"Baseline bullpen",l:["Pre-pen on flat ground: 3 rocker, 3 hip-lead, 5 from the stretch","20 fastballs at 70%. Catcher calls the count out loud after each pitch","Film side and front in slow-mo. A teammate charts on Measure → Bullpen","Non-throwers: catch, chart, then towel drill ×15 and balance-point holds ×10"]},
- H:{t:"HitTrax baseline",l:["Cage 1 (HitTrax): 10 swings each. Captain logs exit velo and line-drive % on Measure","Cage 2 (tee): pause tee ×10, high tee ×5, low tee ×5","Swap cages every 5 minutes"]},
+ H:{t:"HitTrax baseline",l:["Cage 1 · machine (HitTrax): 10 swings each. Captain logs exit velo and line-drive % on Measure","Cage 2 · tee: pause tee ×10, high tee ×5, low tee ×5","Cage 3 · front toss: 10 middle-away, 5 up","Rotate cages every 6–7 minutes"]},
  D:{t:"Ground-ball fundamentals",l:["Short-hop series with a partner, 15 ft: backhand, forehand, middle ×10 each","Funnel + footwork: field, funnel to belly, crow hop, throw to a target","Fungo rounds: 3 balls each, sprint back to the line"]},
  C:{t:"Test night",l:["Plank: everyone at once. Measure → Plank, tap each kid when he drops","Home to 1st and 30-yd: two lines, 2 runs each, timed on Measure","Broad jump: partners read the tape and enter it on Measure"]},
  X:"Short-hop knockout: miss one and you're out. Last kid standing picks next week's warm-up music.",
- low:"6–8: pens in Cage 3 with hitters standing in, then HitTrax. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart."},
+ low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart, then cages."},
 {id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,tonight:["pen","ev","ld"],
  P:{t:"Hit the Glove",l:["Pre-pen: rocker throws and hip-lead walk-ins","10 glove side, 10 arm side, 5 to a spot the catcher calls","Scoring: glove = 2, strike = 1, ball = 0. Beat last week's strike %","Each pitcher gets ONE cue from Coach Justice, typed into his pen"]},
- H:{t:"Load and separation",l:["Pause tee: load, hold 1 second, swing ×10","Step-back tee (walk-in rhythm) ×8","HitTrax: 3 rounds of 6, line drives over 80 exit velo","Swap cages every 5 minutes"]},
+ H:{t:"Load and separation",l:["Tee: pause tee ×10 (load, hold 1 second, swing), step-back tee ×8","Front toss: load early, 10 middle-away","Machine (HitTrax): 3 rounds of 6, line drives over 80 exit velo","Rotate cages every 6–7 minutes"]},
  D:{t:"Range and throws on the run",l:["Backhands and forehands: crossover step first, no drop-step","Slow rollers: charge, barehand or glove, throw on the run","Outfield: drop-step and go on balls over the head"]},
  C:{t:"Power",l:["Med-ball rotational throws, both sides 3 × 5","Lateral bounds with stick 3 × 5 each side","10-yd sprint starts from a lead ×6"]},
  X:"Three-man relay race: outfield → cutoff → home. Fastest clean relay wins; a bad throw restarts the clock.",
- low:"6–8: Hit the Glove in Cage 3 with a hitter tracking (no swing), then HitTrax. 5 or fewer: Hit the Glove as a competition between all of them."},
+ low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: Hit the Glove as a competition between all of them, then cages."},
 {id:"w3",date:"2026-11-13",label:"Nov 13",theme:"Changeup + whole field",focus:"Every pitcher leaves with a changeup he trusts. Hitters learn to drive the outer third the other way.",cue:"Same arm speed, slower ball.",cap:"25 pitches · 75% · 15 FB + 10 CH",capN:25,tonight:["pen","ev","ld"],
  P:{t:"Changeup intro",l:["Learn the grip on flat ground at 45 ft: circle change or three-finger change","Cue: throw it like a fastball through the catcher; the grip slows it, not the arm","On the mound: 15 fastballs, then 10 changeups (flip the charter to CH)","Changeup strikes chart separately"]},
- H:{t:"Use the whole field",l:["Inside-out tee: ball on the inner half, drive it to the opposite field ×8","Outer-third front toss ×10","HitTrax spray goal: 4 of 6 balls to the middle or opposite field"]},
+ H:{t:"Use the whole field",l:["Tee: inside-out, ball on the inner half, drive it to the opposite field ×8","Front toss: outer third ×10","Machine (HitTrax): spray goal, 4 of 6 to the middle or opposite field","Rotate cages every 6–7 minutes"]},
  D:{t:"Double plays",l:["SS and 2B feeds from 20 ft: underhand, backhand flip, pivot throw","2B turns: across the bag and step-back","1B short-hop picks ×10 each"]},
  C:{t:"Strength circuit",l:["Goblet squats, split squats, push-ups, band rows","3 rounds, 8–10 reps, 30-second side planks","60-ft base-to-base sprints ×6"]},
  X:"Hit the Glove showdown: pitchers vs. pitchers, changeups count double.",
- low:"6–8: pitchers throw changeups to hitters in Cage 3 (live, take-or-hit). 5 or fewer: everyone learns the changeup grip, then HitTrax."},
+ low:"6–8: changeup work in the pen while the other group rotates cages, then swap. 5 or fewer: everyone learns the changeup grip, then cages."},
 {id:"w4",date:"2026-11-20",label:"Nov 20",theme:"Win the count",focus:"Win 2 of the first 3 pitches. Hitters learn a two-strike approach. Pitchers field their position.",cue:"Strike one, then change speeds.",cap:"30 pitches · 80% · FB + CH",capN:30,tonight:["pen","ev","ld","h1"],
- P:{t:"Count games",l:["1-1 Game: every pitch starts at 1-1. Strike wins the at-bat","3-Pitch Battles: 6 batters, win if 2 of 3 are strikes (tap New batter between)","Use the changeup in fastball counts (1-0, 2-1)","Compare first-pitch strike % to Week 1 on his player card"]},
- H:{t:"Two-strike hitting",l:["Two-strike stance: choke up, widen, shorten the stride","Battle drill: machine on the black, foul off or put it in play ×8","Front toss mixing fast and slow ×10"]},
+ P:{t:"Count games",l:["1-1 Game: every pitch starts at 1-1, catcher calls it. Strike wins the at-bat","3-Pitch Battles: 6 imaginary batters, win if 2 of 3 are strikes (tap New batter between)","Use the changeup in fastball counts (1-0, 2-1)","Compare first-pitch strike % to Week 1 on his player card"]},
+ H:{t:"Two-strike hitting",l:["Tee: two-strike stance (choke up, widen, short stride) ×10","Machine: on the black, foul it off or put it in play ×8","Front toss: mix fast and slow ×10","Rotate cages every 6–7 minutes"]},
  D:{t:"PFP (pitchers' fielding)",l:["Comebackers to 2B, ball to the 1B side: pitcher covers 1B","Bunts down both lines with a call ('Me! Me!')","3B and catcher communication on pop-ups near the plate"]},
  C:{t:"Baserunning",l:["Home to 1st, timed: 2 runs each (Measure → Home to 1st)","Rounding 1B turns: hit the inside corner ×6","First-step leads and steal reads off a coach","Core circuit: dead bugs, bird dogs, side planks"]},
  X:"1-1 Game team scoring: each group's pitchers throw 10 pitches at 1-1. Group with the most strikes wins.",
- low:"6–8: live 3-Pitch Battles in Cage 3, hitters on a two-strike count. 5 or fewer: PFP for everyone, then count games."},
+ low:"6–8: 3-Pitch Battles in the pen while the other group works two-strike front toss, then swap. 5 or fewer: PFP for everyone, then count games."},
 {id:"w5",date:"2026-11-27",label:"Nov 27",theme:"Light week",focus:"Thanksgiving weekend. Expect low turnout. Rest arms, sharpen recognition, and run the situations that need few bodies.",cue:"See it slow, react fast.",cap:"Flat ground only · 20 throws · 70%",capN:0,tonight:["ev","ld"],
  P:{t:"Flat-ground mechanics",l:["No mound this week","Balance-point holds, hip-lead throws, stride-line on tape","Changeup feel at 45 ft ×20","Video review of Week 1 vs. now"]},
- H:{t:"Pitch recognition",l:["Machine changes speeds; hitter calls 'take' or 'hit' before swinging","Short-game bunting: sacrifice and drag ×8","Tee rounds to stay sharp"]},
+ H:{t:"Pitch recognition",l:["Machine: changes speeds; hitter calls 'take' or 'hit' before swinging","Front toss: sacrifice and drag bunts ×8","Tee: rounds to stay sharp"]},
  D:{t:"Bunt defense + rundowns",l:["Bunt coverage with runner on 1B","First-and-third: throw through, cut by SS/2B, throw to 3B","Rundowns: one throw max, ball shown high"]},
  C:{t:"Mobility",l:["Band work and hip mobility flow","Agility ladder, 8 patterns","Light sprints ×4"]},
  X:"Rundown race: fewest throws to make the tag.",
  low:"This week is built for 5–8 kids. With 9+, add a second fungo line and keep everything else."},
-{id:"w6",date:"2026-12-04",label:"Dec 4",theme:"Live ABs + re-test",focus:"Pitchers face our hitters for real. Re-test everything from Week 1 and show each kid how far he's come.",cue:"Attack the zone. A walk is worse than a single.",cap:"35 pitches incl. live · 85%",capN:35,tonight:ALL_TESTS,
- P:{t:"Live at-bats",l:["Cage 3: each pitcher throws 2 innings vs. our hitters","Catcher calls the game, pitcher works on a 12-second tempo","Chart every batter on Measure → Bullpen"]},
- H:{t:"Live + HitTrax re-test",l:["Live ABs vs. our pitchers in Cage 3","HitTrax re-test: 10 swings, log exit velo and line-drive %","Compare to Week 1 on his player card"]},
+{id:"w6",date:"2026-12-04",label:"Dec 4",theme:"Game-speed pens + re-test",focus:"Pitchers throw simulated innings at game tempo. Re-test everything from Week 1 and show each kid how far he's come.",cue:"Attack the zone. A walk is worse than a single.",cap:"35 pitches · 85% · FB + CH",capN:35,tonight:ALL_TESTS,
+ P:{t:"Simulated innings",l:["Each pitcher throws 2 innings to an imaginary lineup; the catcher calls the game","12-second tempo, FB + CH, count announced after every pitch","Chart every batter on Measure → Bullpen"]},
+ H:{t:"HitTrax re-test",l:["Machine (HitTrax): 10 swings at game speed; log exit velo and line-drive %","Tee and front toss: same as Week 1 so it's a fair comparison","Compare to Week 1 on his player card"]},
  D:{t:"Situations",l:["Runners on, coach calls the situation, everyone talks before the pitch","Cuts and relays with live runners","Pop-up communication"]},
  C:{t:"Re-test",l:["Plank, home to 1st, 30-yd and broad jump, all on Measure","Watch the PR board light up"]},
  X:"HitTrax Home Run Derby: top exit velocity wins.",
- low:"6–8: everyone pitches 1 inning live and hits 2 ABs. 5 or fewer: coaches pitch live too."}
+ low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: one group through pens, grounders and cages."}
 ];
-const STN={P:{c:"p",name:"Pitching",lead:"Coach Justice · pitching lanes"},H:{c:"h",name:"Hitting",lead:"Captain · Cage 1 HitTrax + Cage 2 tee"},D:{c:"d",name:"Defense",lead:"Coach Sam · turf infield"}};
+const STN={P:{c:"p",name:"Bullpen",lead:"Coach Justice · pitching lanes"},H:{c:"h",name:"Cages",lead:"Captain · machine · tee · front toss"},D:{c:"d",name:"Grounders",lead:"Coach Sam · turf infield"}};
 const ROT={A:["P","H","D"],B:["H","D","P"],C:["D","P","H"]};
 
 /* ================= Measurements ================= */
@@ -514,7 +549,9 @@ const unlocked=()=>!!(D&&pin);
 
 /* ================= Data views ================= */
 function rowsOf(k){return (D&&D[k])||[]}
-function roster(){return rowsOf("roster").map(r=>{const pos1=String(r.Primary||""),pos2=String(r.Secondary||"");return {n:Number(r.Number),f:String(r.First||""),l:String(r.Last||""),pos1,pos2,bats:String(r.Bats||""),throws:String(r.Throws||""),p:truthy(r.Pitcher)||pos1==="P"||pos2==="P"}}).filter(r=>r.f&&!isNaN(r.n)).sort((a,b)=>a.n-b.n)}
+function roster(){const pf={};rowsOf("profiles").forEach(r=>pf[Number(r.Number)]=r);
+  return rowsOf("roster").map(r=>{const n=Number(r.Number),q=pf[n]||{},pos1=String(r.Primary||q.Primary||""),pos2=String(r.Secondary||q.Secondary||"");
+    return {n,f:String(r.First||""),l:String(r.Last||""),pos1,pos2,bats:String(r.Bats||q.Bats||""),throws:String(r.Throws||q.Throws||""),goal:String(q.Goal||""),setup:!!pf[n],p:truthy(r.Pitcher)||pos1==="P"||pos2==="P"}}).filter(r=>r.f&&!isNaN(r.n)).sort((a,b)=>a.n-b.n)}
 function presentNums(wid){const s=new Set();rowsOf("attendance").forEach(r=>{if(r.Week===wid&&truthy(r.Present))s.add(Number(r.Number))});return s}
 function note(wid){const r=rowsOf("notes").find(r=>r.Week===wid);return r?String(r.Notes||""):""}
 function attemptsFor(key,wid){return rowsOf("attempts").filter(a=>!truthy(a.Void)&&a.Metric===key&&(!wid||a.Week===wid)&&num(a.Value)!=null)}
@@ -574,7 +611,7 @@ const ERR={pin:"Code rejected. Sign in again.",coach_only:"Only coaches can chan
 let queue=[]; try{queue=JSON.parse(LS.get("ma_q")||"[]")}catch(e){}
 let sending=0,flushTimer=null;
 const saveQ=()=>LS.set("ma_q",JSON.stringify(queue));
-function shape(j){const d=j.data||j;return {role:j.role||"coach",roster:d.roster||[],attendance:d.attendance||[],bullpens:d.bullpens||[],tests:d.tests||[],attempts:d.attempts||[],notes:d.notes||[]}}
+function shape(j){const d=j.data||j;return {role:j.role||"coach",roster:d.roster||[],attendance:d.attendance||[],bullpens:d.bullpens||[],tests:d.tests||[],attempts:d.attempts||[],notes:d.notes||[],profiles:d.profiles||[]}}
 function setD(x){D=x;aggCache=null;queue.forEach(applyLocal);try{LS.set("ma_D",JSON.stringify(x))}catch(e){}}
 function applyLocal(op){
   if(!D)return; const k=keyName(op.sheet); D[k]=D[k]||[];
@@ -678,6 +715,7 @@ function render(){
   renderNav();renderLive();
   const v=route.page==="measure"?measureView():route.page==="team"?teamView():route.page==="boards"?boardsView():practiceView();
   $("#app").innerHTML=v;updateSync();
+  if(needWelcome()&&!wz){wz=wzFor(me?Number(me):null,0,false);renderWelcome()}
   if(gt.running||st.running)requestAnimationFrame(tick);
 }
 function busy(){const a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||a.tagName==="INPUT"||a.tagName==="SELECT")}
@@ -716,10 +754,10 @@ function stationCard(k,w){const s=STN[k],d=w[k];return `<div class="st ${s.c}"><
 function blockBody(b,w,n){
   if(b.k==="stations"){const m=modeFor(n);let rot="";
     if(n&&m===3)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody>${["6:35","6:55","7:15"].map((t,i)=>`<tr><td class="mono">${t}</td>${["A","B","C"].map(g=>{const s=STN[ROT[g][i]];return `<td><span class="tag ${s.c}">${s.name}</span></td>`}).join("")}</tr>`).join("")}</tbody></table></div>`;
-    else if(n&&m===2)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th></tr></thead><tbody><tr><td class="mono">6:35</td><td><span class="tag p">Pitch + hit · Cage 3</span></td><td><span class="tag d">Defense</span></td></tr><tr><td class="mono">7:05</td><td><span class="tag d">Defense</span></td><td><span class="tag p">Pitch + hit · Cage 3</span></td></tr></tbody></table></div>`;
-    else if(n)rot=`<div class="scroll"><table class="rot"><tbody><tr><td class="mono">6:35</td><td><span class="tag d">Defense</span></td></tr><tr><td class="mono">6:55</td><td><span class="tag p">Bullpens · everyone throws</span></td></tr><tr><td class="mono">7:15</td><td><span class="tag h">HitTrax</span></td></tr></tbody></table></div>`;
-    const t=!n?"3 stations × 20 min at full strength. The rotation fills in after check-in.":m===3?"3 stations × 20 min. Whistle at 6:55 and 7:15. Hitting swaps cages every 5 minutes so 4 kids are always swinging.":m===2?"2 stations × 30 min. Pitchers throw to hitters in Cage 3 (Justice); Sam runs defense.":"One group, three 20-minute blocks. Best night for one-on-one video.";
-    return `<p class="hint">${t}</p>${rot}<div class="stations">${stationCard("P",w)}${stationCard("H",w)}${stationCard("D",w)}</div><div class="flex"><b>Low turnout:</b> ${esc(w.low)}</div>`}
+    else if(n&&m===2)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th></tr></thead><tbody><tr><td class="mono">6:35</td><td><span class="tag h">Cages</span></td><td><span class="tag p">Pen + grounders</span></td></tr><tr><td class="mono">7:05</td><td><span class="tag p">Pen + grounders</span></td><td><span class="tag h">Cages</span></td></tr></tbody></table></div>`;
+    else if(n)rot=`<div class="scroll"><table class="rot"><tbody><tr><td class="mono">6:35</td><td><span class="tag d">Grounders</span></td></tr><tr><td class="mono">6:55</td><td><span class="tag p">Bullpen · everyone throws</span></td></tr><tr><td class="mono">7:15</td><td><span class="tag h">Cages</span></td></tr></tbody></table></div>`;
+    const t=!n?"3 stations × 20 min at full strength. The rotation fills in after check-in.":m===3?"3 stations × 20 min. Whistle at 6:55 and 7:15. In the cages, hitters rotate machine → tee → front toss every 6–7 minutes.":m===2?"2 stations × 30 min. Group in the pen throws while the rest catch and chart, then grounders. Swap at 7:05.":"One group, three 20-minute blocks. Best night for one-on-one video.";
+    return `<p class="hint">${t}</p>${rot}<div class="stations">${stationCard("P",w)}${stationCard("H",w)}${stationCard("D",w)}</div><div class="flex"><b>Field taken?</b> Grounders move to the open turf or a cage: short hops, funnel footwork and quick transfers off a partner's roll.</div><div class="flex"><b>Low turnout:</b> ${esc(w.low)}</div>`}
   if(b.k==="cond")return `<p><strong>${esc(w.C.t)}</strong></p><ul>${w.C.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
   if(b.k==="close")return `<p>${esc(w.X)}</p><p class="hint">Cooldown: band pull-aparts, sleeper stretch, cross-body stretch. Each coach gives one takeaway.</p>`;
   return `<p>${esc(b.txt)}</p>`;
@@ -856,7 +894,7 @@ function penTool(w){
   const trail=batters(log).map((b,i)=>(i?'<span class="sep">|</span>':"")+b.map(p=>`<span class="${p.r==="S"?"s":"bl"}">${p.f?"F":p.r==="S"?"K":"B"}${p.t==="CH"?"c":""}</span>`).join("")).join("");
   const savingNow=queue.some(q=>q.sheet==="Bullpens"&&String(q.rec.ID)===s.id),capHit=w.capN&&S.pitches>=w.capN;
   return toolHead("pen",`<span class="saved">${log.length?(savingNow?"Saving…":"Saved ✓"):(w.capN?"Cap "+w.capN+" pitches":"Flat ground week")}</span>`)+`
-   <p class="hint">A teammate charts on a coach's phone. Tap every pitch and it saves as you go. Walks, strikeouts and balls in play start the next batter on their own.</p>
+   <p class="hint">Imaginary batters: the catcher calls the count. A teammate taps every pitch and it saves as you go. A walk or strikeout starts the next batter on its own.</p>
    <div class="who-t">Pitcher</div>
    <div class="kids">${order.map(p=>{const ps=pens(w.id).find(r=>r.Number===p.n);return `<button class="kid ${String(p.n)===pen.who?"sel":""} ${ps?"has":""}" data-pitcher="${p.n}"><b>${esc(shortName(p))}${p.p?'<span class="ptag">P</span>':""}</b><small>${ps?ps.Pitches+" p · "+ps["Strike %"]+"%":"–"}</small></button>`}).join("")}</div>
    <div class="pen-top"><span class="mono" style="font-weight:700">${S.ended?`Batter ${S.batters+1} · 0-0`:`Batter ${Math.max(1,S.batters)} · ${S.balls}-${S.ks}`}</span>
@@ -866,8 +904,7 @@ function penTool(w){
     <div class="sbx ${grade(fp,60,50)}"><b>${fp==null?"–":fp+"%"}</b><span>1st-pitch K</span></div>
     <div class="sbx ${grade(ap,67,50)}"><b>${ap==null?"–":ap+"%"}</b><span>Ahead after 3</span></div>
     <div class="sbx"><b>${S.ch?S.chS+"/"+S.ch:"–"}</b><span>CH strikes</span></div></div>
-   <div class="pitchpad"><button class="pp k" data-pitch="S">Strike</button><button class="pp b" data-pitch="B">Ball</button><button class="pp f" data-pitch="F">Foul</button>
-    <button class="pp ip" data-pitch="IP">In play</button><button class="pp nb" data-pitch="NB">New batter</button></div>
+   <div class="pitchpad"><button class="pp k" data-pitch="S">Strike</button><button class="pp b" data-pitch="B">Ball</button><button class="pp nb" data-pitch="NB">New batter</button></div>
    <div class="trail" aria-label="Pitch log">${trail||'<span class="sep">No pitches yet</span>'}</div>
    ${capHit?`<div class="capwarn">Pitch cap reached (${w.capN}). Finish this batter and shut him down.</div>`:""}
    <div class="row" style="margin-top:12px"><input id="pencue" placeholder="His one cue (e.g. stay closed)" style="flex:1 1 200px" value="${esc(s.cue||"")}"><button class="btn ghost" id="penundo" ${log.length?"":"disabled"}>Undo</button></div>`;
@@ -880,6 +917,57 @@ function tick(){
   const c=$("#clock");if(!c)return;
   if(st.running&&MET[mt.act]&&MET[mt.act].tool==="timer"){c.textContent=((performance.now()-st.t0)/1000).toFixed(2);requestAnimationFrame(tick)}
   else if(gt.running&&mt.act==="plank"){c.textContent=mmss((performance.now()-gt.t0)/1000);requestAnimationFrame(tick)}
+}
+
+/* ================= Welcome (players, first visit on a phone) ================= */
+const GOALS=[
+ {k:"ev",l:"Hit it harder",s:"Exit velo"},{k:"k",l:"Throw more strikes",s:"Strike %"},{k:"h1",l:"Get down the line faster",s:"Home to 1st"},
+ {k:"ld",l:"Square it up more",s:"Line-drive %"},{k:"broad",l:"Jump farther",s:"Broad jump"},{k:"plank",l:"Out-grind everybody",s:"Plank"},{k:"iron",l:"Never miss a Friday",s:"Attendance"}];
+let wz=null;
+const needWelcome=()=>!!(D&&pin&&D.role==="player"&&!LS.get("ma_welcomed"));
+function wzFor(n,step,edit){const p=roster().find(x=>x.n===n)||{};return {step,edit:!!edit,n:n??null,pos1:p.pos1||"",pos2:p.pos2||"",bats:p.bats||"",throws:p.throws||"",goal:p.goal||""}}
+function renderWelcome(){
+  const el=$("#welcome");if(!wz){el.hidden=true;el.innerHTML="";document.body.style.overflow="";return}
+  const R=roster(),p=R.find(x=>x.n===wz.n),steps=wz.edit?[1,2]:[0,1,2,3];
+  const opt=(attr,val,cur,label)=>`<button class="wz-opt" data-${attr}="${val}" aria-pressed="${String(cur)===String(val)}">${label||val}</button>`;
+  let top="",body="",foot="";
+  if(wz.step===0){top=`<h1>Welcome to Mad Apple Winter</h1><p>Six Fridays. Every number you set this winter lives here, and the only person you have to beat is you.</p>`;
+    body=`<h2 class="wz-h">Which one is you?</h2><div class="wz-grid">${R.map(x=>`<button class="wz-opt name" data-wzme="${x.n}" aria-pressed="${x.n===wz.n}"><span class="no">${x.n}</span>${esc(x.f)} ${esc(x.l)}</button>`).join("")}</div>`;
+    foot=`<button class="btn ghost" id="wzskip">Later</button><button class="btn" id="wznext" ${wz.n==null?"disabled":""}>Next</button>`}
+  if(wz.step===1){top=`<h1>${p?esc(p.f)+", where":"Where"} do you play?</h1><p>Your coaches can adjust this later. Pick what you play most.</p>`;
+    body=`<h2 class="wz-h">Main position</h2><div class="wz-grid pos">${POS.map(x=>opt("wzpos1",x,wz.pos1)).join("")}</div>
+     <h2 class="wz-h">Also play <span class="muted">(optional)</span></h2><div class="wz-grid pos">${POS.filter(x=>x!==wz.pos1).map(x=>opt("wzpos2",x,wz.pos2)).join("")}${opt("wzpos2","",wz.pos2,"None")}</div>
+     <div class="wz-two"><div><h2 class="wz-h">Bats</h2><div class="wz-grid three">${[["R","Right"],["L","Left"],["S","Both"]].map(([v,l])=>opt("wzbats",v,wz.bats,l)).join("")}</div></div>
+     <div><h2 class="wz-h">Throws</h2><div class="wz-grid two">${[["R","Right"],["L","Left"]].map(([v,l])=>opt("wzthrows",v,wz.throws,l)).join("")}</div></div></div>`;
+    foot=`<button class="btn ghost" id="wzback">${wz.edit?"Cancel":"Back"}</button><button class="btn" id="wznext" ${wz.pos1?"":"disabled"}>Next</button>`}
+  if(wz.step===2){top=`<h1>Pick your winter goal</h1><p>One thing you want to be better at by December 4. We'll track it on your card.</p>`;
+    body=`<div class="goals">${GOALS.map(g=>`<button class="goalopt" data-wzgoal="${g.k}" aria-pressed="${wz.goal===g.k}"><b>${g.l}</b><small>${g.s}</small></button>`).join("")}</div>`;
+    foot=`<button class="btn ghost" id="wzback">Back</button><button class="btn" id="${wz.edit?"wzdone":"wznext"}" ${wz.goal?"":"disabled"}>${wz.edit?"Save":"Next"}</button>`}
+  if(wz.step===3){top=`<h1>You're in, ${p?esc(p.f):""}</h1><p>Here's how it works.</p>`;
+    body=`${p?cardHTML({...p,pos1:wz.pos1}):""}
+     <ul class="tips"><li><b>Your card.</b> Ratings run 60–99 and only go up. Show up and beat your own numbers.</li>
+      <li><b>Boards.</b> Top 5 in every test, plus most-improved boards anyone can win.</li>
+      <li><b>Measure.</b> Help log numbers for teammates: time runs, tap planks, chart pens.</li>
+      <li><b>Badges.</b> Nine to earn. Your card shows what's next.</li></ul>`;
+    foot=`<button class="btn" id="wzdone" style="flex:1">Let's go</button>`}
+  const i=steps.indexOf(wz.step);
+  el.hidden=false;document.body.style.overflow="hidden";
+  el.innerHTML=`<div class="wz-top"><div class="wz-in"><div class="wz-dots">${steps.map((x,j)=>`<i class="${j<=i?"on":""}"></i>`).join("")}</div>${top}</div></div><div class="wz-body">${body}</div><div class="wz-foot"><div class="wz-in row" style="flex-wrap:nowrap">${foot}</div></div>`;
+}
+function wzFinish(){
+  const rec={Number:wz.n,Primary:wz.pos1,Secondary:wz.pos2,Bats:wz.bats,Throws:wz.throws,Goal:wz.goal};
+  save("Profiles",["Number"],rec,"merge");
+  me=String(wz.n);LS.set("ma_me",me);LS.set("ma_welcomed","1");
+  const n=wz.n,edit=wz.edit;wz=null;renderWelcome();
+  if(!edit&&location.hash!=="#player-"+n)location.hash="#player-"+n;else render();
+  toast(edit?"Saved":"Welcome to the team");if(!edit)confetti();
+}
+function goalHTML(p){
+  const g=GOALS.find(x=>x.k===p.goal);if(!g)return "";let prog="";
+  if(MET[g.k]){const m=MET[g.k],sr=series(p.n,g.k);prog=sr.length>=2?`Started at ${m.show(sr[0].v)} · best ${m.show(bestOf(p.n,g.k))}`:sr.length?`Baseline ${m.show(sr[0].v)}. Now beat it.`:"No number yet. Get one logged on Measure."}
+  else if(g.k==="k"){const rs=pitcherSeason(p.n).rs;prog=rs.length>=2?`First pen ${rs[0]["Strike %"]}% · latest ${rs[rs.length-1]["Strike %"]}% · goal 60%`:rs.length?`First pen ${rs[0]["Strike %"]}%. Goal 60%.`:"Chart a pen to start."}
+  else{const a=WEEKS.filter(w=>presentNums(w.id).has(p.n)).length;prog=`${a} of ${weeksSoFar()} Fridays so far`}
+  return `<div class="goal"><span>Winter goal</span><b>${g.l}</b><small>${prog}</small></div>`;
 }
 
 /* ================= Team ================= */
@@ -958,7 +1046,8 @@ function playerView(n){
   const cues=s.rs.filter(r=>r.Cue);
   return `<a class="back" href="#team">← Roster</a>
   <div class="cardwrap">${cardHTML(p)}<div>
-   ${String(p.n)===me?`<p class="hint">This is you. <button class="linkbtn" id="notme">Not you?</button></p>`:`<button class="btn ghost" id="isme" data-num="${p.n}">This is me</button>`}
+   ${goalHTML(p)}
+   ${String(p.n)===me?`<div class="row" style="margin-top:10px"><button class="btn ghost" id="editme" data-num="${p.n}">${p.goal?"Edit my info":"Set my positions + goal"}</button><button class="linkbtn" id="notme">Not you?</button></div>`:`<button class="btn ghost" id="isme" data-num="${p.n}" style="margin-top:10px">This is me</button>`}
    <p class="hint" style="margin-top:10px">Ratings run 60–99 and only go up. Show up and Hustle climbs. Beat your own numbers and Growth climbs.</p>
    ${lockd.length?`<p class="hint" style="margin-top:10px"><b>Next badge:</b> ${esc(lockd[0].name)}. ${esc(lockd[0].how)}.</p>`:""}</div></div>
   <section class="card"><div class="ch"><h2>Badges</h2><span class="count">${got.length}/${BADGES.length}</span></div><div class="badges">${got.map(b=>`<span class="bdg on"><b>${b.name}</b><small>${b.how}</small></span>`).join("")}${lockd.map(b=>`<span class="bdg off"><b>${b.name}</b><small>${b.how}</small></span>`).join("")}</div></section>
@@ -1021,6 +1110,17 @@ document.addEventListener("click",e=>{
   if(el.id==="signout"){signOut("");return}
   if(el.id==="isme"){me=d.num;LS.set("ma_me",me);render();toast("Saved on this phone");return}
   if(el.id==="notme"){me="";LS.del("ma_me");render();return}
+  if(el.id==="editme"){wz=wzFor(Number(d.num),1,true);renderWelcome();return}
+  if(d.wzme){wz.n=Number(d.wzme);const f=wzFor(wz.n,0,false);Object.assign(wz,{pos1:f.pos1,pos2:f.pos2,bats:f.bats,throws:f.throws,goal:f.goal});renderWelcome();return}
+  if(d.wzpos1!==undefined){wz.pos1=d.wzpos1;if(wz.pos2===wz.pos1)wz.pos2="";renderWelcome();return}
+  if(d.wzpos2!==undefined){wz.pos2=d.wzpos2;renderWelcome();return}
+  if(d.wzbats){wz.bats=d.wzbats;renderWelcome();return}
+  if(d.wzthrows){wz.throws=d.wzthrows;renderWelcome();return}
+  if(d.wzgoal){wz.goal=d.wzgoal;renderWelcome();return}
+  if(el.id==="wznext"){wz.step++;renderWelcome();$("#welcome").scrollTop=0;return}
+  if(el.id==="wzback"){if(wz.edit&&wz.step===1){wz=null;renderWelcome();return}wz.step--;renderWelcome();$("#welcome").scrollTop=0;return}
+  if(el.id==="wzskip"){LS.set("ma_welcomed","1");wz=null;renderWelcome();return}
+  if(el.id==="wzdone"){wzFinish();return}
   if(d.att){const wk=WEEKS.find(x=>x.id===route.wid),n=Number(d.att),on=el.getAttribute("aria-pressed")!=="true";save("Attendance",["Week","Number"],{Week:wk.id,Date:wk.date,Number:n,Present:on},"overwrite");buzz(15);render();return}
   if(d.ptog){const n=Number(d.ptog),on=el.getAttribute("aria-pressed")!=="true";save("Roster",["Number"],{Number:n,Pitcher:on},"overwrite");render();return}
   if(el.id==="psave"){const n=Number(d.num),g=id=>($("#"+id)||{}).value||"",cur=roster().find(p=>p.n===n)||{};
