@@ -425,12 +425,12 @@ details.card summary::-webkit-details-marker{display:none}
 <script>
 /* ================= Plan content (no player names in this file) ================= */
 const BLOCKS=[
- {s:"17:50",e:"18:00",k:"setup",name:"Arrive + set up",where:"Turf",lead:"Captains",txt:"Turf shoes on, J-bands out, cages and screens set, phones in bags. Coach Sam checks everyone in."},
- {s:"18:00",e:"18:12",k:"warm",name:"Dynamic warm-up",where:"Turf",lead:"Coach Sam",txt:"Jog 2 laps → high knees, butt kicks, A-skips, lunge with twist, lateral shuffles, carioca → 3 × 20-yd build-up sprints. Two lines facing a coach; nobody jogs alone."},
- {s:"18:12",e:"18:20",k:"arm",name:"Arm care (J-bands)",where:"Turf",lead:"Coach Justice",txt:"10 each: forward fly, reverse fly, internal and external rotation at 90°, high pulls, low pulls, throwing-motion pulls. Partners count reps out loud."},
+ {s:"17:50",e:"18:00",k:"setup",name:"Arrive + set up",where:"Turf",lead:"Captains",txt:"Turf shoes on, J-bands out, cages and screens set, phones in bags. A coach checks everyone in."},
+ {s:"18:00",e:"18:12",k:"warm",name:"Dynamic warm-up",where:"Turf",lead:"Coach Justice",txt:"Jog 2 laps → high knees, butt kicks, A-skips, lunge with twist, lateral shuffles, carioca → 3 × 20-yd build-up sprints. Two lines facing a coach; nobody jogs alone."},
+ {s:"18:12",e:"18:20",k:"arm",name:"Arm care (J-bands)",where:"Turf",lead:"Coach Sam",txt:"10 each: forward fly, reverse fly, internal and external rotation at 90°, high pulls, low pulls, throwing-motion pulls. Partners count reps out loud."},
  {s:"18:20",e:"18:35",k:"throw",name:"Throwing progression",where:"Turf, 60 ft",lead:"Both coaches",txt:"Pairs on a line. Wrist flips (10) → one-knee (10) → rocker (10) → full throws back to 60 ft (15). Chest is the target; partner calls 'hit' or 'miss'. Last 2 minutes: quick-hands race, 20 throws, fastest pair wins."},
- {s:"18:35",e:"19:35",k:"stations",name:"Stations",where:"Pen · Cages · Turf",lead:"Justice / captain / Sam"},
- {s:"19:35",e:"19:52",k:"cond",name:"Conditioning",where:"Weight area + turf",lead:"Coach Sam"},
+ {s:"18:35",e:"19:35",k:"stations",name:"Stations",where:"Pen · Cages · Turf",lead:"Sam / captain / Justice"},
+ {s:"19:35",e:"19:52",k:"cond",name:"Conditioning",where:"Weight area + turf",lead:"Coach Justice"},
  {s:"19:52",e:"20:00",k:"close",name:"Compete + close",where:"Turf",lead:"Both coaches"}
 ];
 const ALL_TESTS=["pen","ev","ld","plank","h1","sprint30","broad"];
@@ -443,7 +443,7 @@ const WEEKS=[
  X:"Short-hop knockout: miss one and you're out. Last kid standing picks next week's warm-up music.",
  low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart, then cages."},
 {id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,tonight:["pen","ev","ld"],
- P:{t:"Hit the Glove",l:["Pre-pen: rocker throws and hip-lead walk-ins","10 glove side, 10 arm side, 5 to a spot the catcher calls","Scoring: glove = 2, strike = 1, ball = 0. Beat last week's strike %","Each pitcher gets ONE cue from Coach Justice, typed into his pen"]},
+ P:{t:"Hit the Glove",l:["Pre-pen: rocker throws and hip-lead walk-ins","10 glove side, 10 arm side, 5 to a spot the catcher calls","Scoring: glove = 2, strike = 1, ball = 0. Beat last week's strike %","Each pitcher gets ONE cue from Coach Sam, typed into his pen"]},
  H:{t:"Load and separation",l:["Tee: pause tee ×10 (load, hold 1 second, swing), step-back tee ×8","Front toss: load early, 10 middle-away","Machine (HitTrax): 3 rounds of 6, line drives over 80 exit velo","Rotate cages every 6–7 minutes"]},
  D:{t:"Range and throws on the run",l:["Backhands and forehands: crossover step first, no drop-step","Slow rollers: charge, barehand or glove, throw on the run","Outfield: drop-step and go on balls over the head"]},
  C:{t:"Power",l:["Med-ball rotational throws, both sides 3 × 5","Lateral bounds with stick 3 × 5 each side","10-yd sprint starts from a lead ×6"]},
@@ -478,7 +478,7 @@ const WEEKS=[
  X:"HitTrax Home Run Derby: top exit velocity wins.",
  low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: one group through pens, grounders and cages."}
 ];
-const STN={P:{c:"p",name:"Bullpen",lead:"Coach Justice · pitching lanes"},H:{c:"h",name:"Cages",lead:"Captain · machine · tee · front toss"},D:{c:"d",name:"Grounders",lead:"Coach Sam · turf infield"}};
+const STN={P:{c:"p",name:"Bullpen",lead:"Coach Sam · pitching lanes"},H:{c:"h",name:"Cages",lead:"Captain runs it · Coach Justice checks in"},D:{c:"d",name:"Grounders",lead:"Coach Justice · turf infield"}};
 const ROT={A:["P","H","D"],B:["H","D","P"],C:["D","P","H"]};
 
 /* ================= Measurements ================= */
