@@ -79,6 +79,7 @@ svg.i{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke
 .pill b{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase}
 .pill.red{background:var(--apple-soft)} .pill.red b{color:var(--apple)}
 .pill.blue{background:var(--sky-soft)} .pill.blue b{color:var(--sky)}
+.pill.gold{background:var(--now);color:#14202e} .pill.gold b{color:#14202e}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px;margin-top:14px}
 .ch{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .ch h2,.h2{font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.03em;margin:0;line-height:1.1}
@@ -434,18 +435,20 @@ const BLOCKS=[
 ];
 const ALL_TESTS=["pen","ev","ld","plank","h1","sprint30","broad"];
 const WEEKS=[
-{id:"w1",date:"2026-10-30",label:"Oct 30",theme:"Baseline",focus:"Measure everything so every kid can see himself improve by December. Set the standard: we hustle between stations and nobody stands.",cue:"Every throw has a target.",cap:"20 pitches · 70% · fastballs only",capN:20,tonight:ALL_TESTS,
+{id:"w1",date:"2026-10-30",label:"Oct 30",theme:"Baseline",focus:"Measure everything so every kid can see himself improve by December. Set the standard: we hustle between stations and nobody stands.",cue:"Every throw has a target.",cap:"20 pitches · 70% · fastballs only",capN:20,tonight:["pen","ev","ld","plank","h1","broad"],
+ space:"One cage + the pen tonight. No infield.",where:{setup:"Cage + pen",warm:"Open floor",arm:"Open floor",stations:"Pen · Cage · Open floor",cond:"Cage + open floor",close:"Open floor"},
+ stn:{H:{name:"Cage",lead:"Captain runs it · Coach Justice checks in"},D:{name:"Tests + glove",lead:"Coach Justice · open floor"}},
  P:{t:"Baseline bullpen",l:["Pre-pen on flat ground: 3 rocker, 3 hip-lead, 5 from the stretch","20 fastballs at 70%. Catcher calls the count out loud after each pitch","Film side and front in slow-mo. A teammate charts on Measure → Bullpen","Non-throwers: catch, chart, then towel drill ×15 and balance-point holds ×10"]},
- H:{t:"HitTrax baseline",l:["Cage 1 · machine (HitTrax): 10 swings each. Captain logs exit velo and line-drive % on Measure","Cage 2 · tee: pause tee ×10, high tee ×5, low tee ×5","Cage 3 · front toss: 10 middle-away, 5 up","Rotate cages every 8 minutes"]},
- D:{t:"Ground-ball fundamentals",l:["Short-hop series with a partner, 15 ft: backhand, forehand, middle ×10 each","Funnel + footwork: field, funnel to belly, crow hop, throw to a target","Fungo rounds: 3 balls each, sprint back to the line"]},
- C:{t:"Test night",l:["Plank: everyone at once. Measure → Plank, tap each kid when he drops","Home to 1st and 30-yd: two lines, 2 runs each, timed on Measure","Broad jump: partners read the tape and enter it on Measure"]},
- X:"Short-hop knockout: miss one and you're out. Last kid standing is Champ of the Week.",
- low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart, then cages."},
-{id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,tonight:["pen","ev","ld"],
+ H:{t:"One-cage rounds",l:["4 hitters, 5-swing rounds, rotate fast. On deck = dry swings with one cue","HitTrax cage? 10 swings each. Captain logs exit velo and line-drive % on Measure","Not HitTrax? Front toss middle-away, and skip those two numbers this week","Get a second cage after all? Machine in one, front toss in the other"]},
+ D:{t:"Tests + glove work",l:["First 5 min, plank: the whole group at once. Measure → Plank, tap each kid when he drops","Broad jump: tape on the floor, best of 2, a partner enters it on Measure","Rest of the block, glove work: partner short hops ×10 each side, funnel footwork, quick transfers"]},
+ C:{t:"Home to 1st in the cage",l:["Mark 60 ft in the cage. 2 runs each from a dry swing, timed on Measure","30-yd sprint moves to Week 2. No room tonight","Finisher: dead bugs and side planks, 2 rounds"]},
+ X:"Short-hop knockout on the open floor: miss one and you're out. Last kid standing is Champ of the Week.",
+ low:"6–8: two groups, the cage and pen + tests, then swap. 5 or fewer: everyone throws the 20-pitch baseline pen while the others catch and chart, then cage rounds."},
+{id:"w2",date:"2026-11-06",label:"Nov 6",theme:"Fastball command",focus:"Pitch to both sides of the plate. Hitters build load and hip-shoulder separation.",cue:"Hips lead, hands follow.",cap:"25 pitches · 75%",capN:25,tonight:["pen","ev","ld","sprint30"],
  P:{t:"Hit the Glove",l:["Pre-pen: rocker throws and hip-lead walk-ins","10 glove side, 10 arm side, 5 to a spot the catcher calls","Scoring: glove = 2, strike = 1, ball = 0. Beat last week's strike %","Each pitcher gets ONE cue from Coach Sam, typed into his pen"]},
  H:{t:"Load and separation",l:["Tee: pause tee ×10 (load, hold 1 second, swing), step-back tee ×8","Front toss: load early, 10 middle-away","Machine (HitTrax): 3 rounds of 6, line drives over 80 exit velo","Rotate cages every 8 minutes"]},
  D:{t:"Range and throws on the run",l:["Backhands and forehands: crossover step first, no drop-step","Slow rollers: charge, barehand or glove, throw on the run","Outfield: drop-step and go on balls over the head"]},
- C:{t:"Power",l:["Med-ball rotational throws, both sides 3 × 5","Lateral bounds with stick 3 × 5 each side","10-yd sprint starts from a lead ×6"]},
+ C:{t:"Power",l:["30-yd sprint (moved from Week 1): 2 runs each, timed on Measure","Med-ball rotational throws, both sides 3 × 5","Lateral bounds with stick 3 × 5 each side","10-yd sprint starts from a lead ×6"]},
  X:"Three-man relay race: outfield → cutoff → home. Fastest clean relay wins; a bad throw restarts the clock.",
  low:"6–8: two groups, cages and pen + grounders, then swap. 5 or fewer: Hit the Glove as a competition between all of them, then cages."},
 {id:"w3",date:"2026-11-13",label:"Nov 13",theme:"Changeup + whole field",focus:"Every pitcher leaves with a changeup he trusts. Hitters learn to drive the outer third the other way.",cue:"Same arm speed, slower ball.",cap:"25 pitches · 75% · 15 FB + 10 CH",capN:25,tonight:["pen","ev","ld"],
@@ -479,6 +482,7 @@ const WEEKS=[
 ];
 const STN={P:{c:"p",name:"Bullpen",lead:"Coach Sam · pitching lanes"},H:{c:"h",name:"Cages",lead:"Captain runs it · Coach Justice checks in"},D:{c:"d",name:"Grounders",lead:"Coach Justice · turf infield"}};
 const ROT={A:["P","H","D"],B:["H","D","P"],C:["D","P","H"]};
+const stnOf=w=>w&&w.stn?{P:{...STN.P,...(w.stn.P||{})},H:{...STN.H,...(w.stn.H||{})},D:{...STN.D,...(w.stn.D||{})}}:STN;
 
 /* ================= Measurements ================= */
 const mmss=s=>{const t=Math.round(s);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
@@ -689,7 +693,7 @@ function liveState(){
   const b=BLOCKS[i];let end=toMin(b.e),title=b.name,next=BLOCKS[i+1]?BLOCKS[i+1].name:"Done for the night";
   if(b.k==="stations"){const n=presentNums(w.id).size,mode=modeFor(n||13),len=(toMin(b.e)-toMin(b.s))/(mode===2?2:3),k=Math.min(Math.floor((m-toMin(b.s))/len),mode===2?1:2);
     end=toMin(b.s)+(k+1)*len;title=(mode===3?`Rotation ${k+1} of 3`:mode===2?`Station ${k+1} of 2`:`Block ${k+1} of 3`);
-    if(mode===3)title+=": "+["A","B","C"].map(g=>g+" "+STN[ROT[g][k]].name).join(" · ");
+    if(mode===3){const S=stnOf(w);title+=": "+["A","B","C"].map(g=>g+" "+S[ROT[g][k]].name).join(" · ")}
     next=k+1<(mode===2?2:3)?"Rotate":"Conditioning"}
   return {w,b,title,next,left:Math.max(0,(end-m)*60)};
 }
@@ -732,32 +736,32 @@ function practiceView(){
   const seg=segs.some(s=>s[0]===pseg)?pseg:"plan";
   return weekStrip(w.id)+`
   <div class="hero"><div class="eyebrow">Week ${idx+1} · ${w.date===todayStr()?"Tonight":"Friday "+w.label} · 6–8 pm</div><h1 class="title">${esc(w.theme)}</h1><p class="lede">${esc(w.focus)}</p>
-   <div class="chips"><span class="pill red"><b>Cue</b>${esc(w.cue)}</span><span class="pill blue"><b>Pitch cap</b>${esc(w.cap)}</span></div></div>
+   <div class="chips"><span class="pill red"><b>Cue</b>${esc(w.cue)}</span><span class="pill blue"><b>Pitch cap</b>${esc(w.cap)}</span>${w.space?`<span class="pill gold"><b>Space</b>${esc(w.space)}</span>`:""}</div></div>
   ${unlocked()?"":lockPanel()}${segs.length>1?segHTML("p",segs,seg):""}
   ${seg==="plan"?planHTML(w,present):seg==="checkin"?checkinHTML(w,present):notesHTML(w)}`;
 }
-function groupsHTML(present){
+function groupsHTML(present,w){const S=stnOf(w);
   const list=roster().filter(p=>present.has(p.n)),n=list.length;if(!n)return "";
   const m=modeFor(n),g=buildGroups(list,m);
-  return `<div class="groups">${g.map((gr,i)=>{const L="ABC"[i];const path=m===3?ROT[L].map(k=>STN[k].name).join(" → "):m===2?(i?"Defense → Pitch + hit":"Pitch + hit → Defense"):"All stations together";
+  return `<div class="groups">${g.map((gr,i)=>{const L="ABC"[i];const path=m===3?ROT[L].map(k=>S[k].name).join(" → "):m===2?(i?`Pen + ${S.D.name.toLowerCase()} → ${S.H.name}`:`${S.H.name} → Pen + ${S.D.name.toLowerCase()}`):"All stations together";
     return `<div class="grp"><h3>Group ${L} <span class="count muted" style="font-size:12px">${gr.length}</span></h3><ul>${gr.map(p=>`<li class="${String(p.n)===me?"me":""}">#${p.n} ${esc(shortName(p))}${p.p?'<span class="ptag">P</span>':""}</li>`).join("")}</ul><div class="path">${path}</div></div>`}).join("")}</div>`;
 }
 function planHTML(w,present){
-  const n=present.size,L=liveState(),live=L&&L.w.id===w.id?L.b.k:null,gh=unlocked()?groupsHTML(present):"";
+  const n=present.size,L=liveState(),live=L&&L.w.id===w.id?L.b.k:null,gh=unlocked()?groupsHTML(present,w):"";
   return `${unlocked()&&w.tonight.length?`<div class="tonight"><span class="lbl">Measuring</span>${w.tonight.map(k=>`<a class="tchip" href="#measure-${k}">${ic(k)}${ACTNAME[k]}</a>`).join("")}</div>`:""}
   ${gh?`<section class="card"><div class="ch"><h2>Tonight's groups</h2><span class="mode">${n} here · ${modeFor(n)===3?"3 stations":modeFor(n)===2?"2 stations":"all together"}</span></div>${gh}</section>`:""}
   <div class="tl">${BLOCKS.map(b=>{const key=w.id+b.k,open=openBlk[key]!=null?openBlk[key]:(b.k===live||(!live&&b.k==="stations"));
-    return `<details class="blk ${b.k===live?"now":""}" data-blk="${key}" ${open?"open":""}><summary><span class="bt">${fmt12(b.s)}</span><span class="bn">${b.name}${b.k===live?'<span class="nowtag">NOW</span>':""}<small>${b.where} · ${b.lead} · ${toMin(b.e)-toMin(b.s)} min</small></span>${ic("chev","chev")}</summary><div class="bb">${blockBody(b,w,n)}</div></details>`}).join("")}</div>`;
+    return `<details class="blk ${b.k===live?"now":""}" data-blk="${key}" ${open?"open":""}><summary><span class="bt">${fmt12(b.s)}</span><span class="bn">${b.name}${b.k===live?'<span class="nowtag">NOW</span>':""}<small>${(w.where&&w.where[b.k])||b.where} · ${b.lead} · ${toMin(b.e)-toMin(b.s)} min</small></span>${ic("chev","chev")}</summary><div class="bb">${blockBody(b,w,n)}</div></details>`}).join("")}</div>`;
 }
-function stationCard(k,w){const s=STN[k],d=w[k];return `<div class="st ${s.c}"><h4>${s.name}</h4><strong>${esc(d.t)}</strong><div class="who">${s.lead}</div><ul>${d.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
+function stationCard(k,w){const s=stnOf(w)[k],d=w[k];return `<div class="st ${s.c}"><h4>${s.name}</h4><strong>${esc(d.t)}</strong><div class="who">${s.lead}</div><ul>${d.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
 function slotTimes(b,k){const a=toMin(b.s),len=(toMin(b.e)-a)/k;return Array.from({length:k},(_,i)=>{const t=Math.round(a+i*len);return fmt12(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"))})}
 function blockBody(b,w,n){
-  if(b.k==="stations"){const m=modeFor(n),T3=slotTimes(b,3),T2=slotTimes(b,2),L3=Math.round((toMin(b.e)-toMin(b.s))/3),L2=Math.round((toMin(b.e)-toMin(b.s))/2);let rot="";
-    if(n&&m===3)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody>${T3.map((t,i)=>`<tr><td class="mono">${t}</td>${["A","B","C"].map(g=>{const s=STN[ROT[g][i]];return `<td><span class="tag ${s.c}">${s.name}</span></td>`}).join("")}</tr>`).join("")}</tbody></table></div>`;
-    else if(n&&m===2)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th></tr></thead><tbody><tr><td class="mono">${T2[0]}</td><td><span class="tag h">Cages</span></td><td><span class="tag p">Pen + grounders</span></td></tr><tr><td class="mono">${T2[1]}</td><td><span class="tag p">Pen + grounders</span></td><td><span class="tag h">Cages</span></td></tr></tbody></table></div>`;
-    else if(n)rot=`<div class="scroll"><table class="rot"><tbody><tr><td class="mono">${T3[0]}</td><td><span class="tag d">Grounders</span></td></tr><tr><td class="mono">${T3[1]}</td><td><span class="tag p">Bullpen · everyone throws</span></td></tr><tr><td class="mono">${T3[2]}</td><td><span class="tag h">Cages</span></td></tr></tbody></table></div>`;
-    const t=!n?`3 stations × ${L3} min at full strength. The rotation fills in after check-in.`:m===3?`3 stations × ${L3} min. Whistle at ${T3[1]} and ${T3[2]}. In the cages, hitters rotate machine → tee → front toss every 8 minutes.`:m===2?`2 stations × ${L2} min. Group in the pen throws while the rest catch and chart, then grounders. Swap at ${T2[1]}.`:`One group, three ${L3}-minute blocks. Best night for one-on-one video.`;
-    return `<p class="hint">${t}</p>${rot}<div class="stations">${stationCard("P",w)}${stationCard("H",w)}${stationCard("D",w)}</div><div class="flex"><b>Field taken?</b> Grounders move to the open turf or a cage: short hops, funnel footwork and quick transfers off a partner's roll.</div><div class="flex"><b>Low turnout:</b> ${esc(w.low)}</div>`}
+  if(b.k==="stations"){const S=stnOf(w),m=modeFor(n),T3=slotTimes(b,3),T2=slotTimes(b,2),L3=Math.round((toMin(b.e)-toMin(b.s))/3),L2=Math.round((toMin(b.e)-toMin(b.s))/2);let rot="";
+    if(n&&m===3)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody>${T3.map((t,i)=>`<tr><td class="mono">${t}</td>${["A","B","C"].map(g=>{const s=stnOf(w)[ROT[g][i]];return `<td><span class="tag ${s.c}">${s.name}</span></td>`}).join("")}</tr>`).join("")}</tbody></table></div>`;
+    else if(n&&m===2)rot=`<div class="scroll"><table class="rot"><thead><tr><th>Time</th><th>A</th><th>B</th></tr></thead><tbody><tr><td class="mono">${T2[0]}</td><td><span class="tag h">${S.H.name}</span></td><td><span class="tag p">Pen + ${S.D.name.toLowerCase()}</span></td></tr><tr><td class="mono">${T2[1]}</td><td><span class="tag p">Pen + ${S.D.name.toLowerCase()}</span></td><td><span class="tag h">${S.H.name}</span></td></tr></tbody></table></div>`;
+    else if(n)rot=`<div class="scroll"><table class="rot"><tbody><tr><td class="mono">${T3[0]}</td><td><span class="tag d">${S.D.name}</span></td></tr><tr><td class="mono">${T3[1]}</td><td><span class="tag p">Bullpen · everyone throws</span></td></tr><tr><td class="mono">${T3[2]}</td><td><span class="tag h">${S.H.name}</span></td></tr></tbody></table></div>`;
+    const t=!n?`3 stations × ${L3} min at full strength. The rotation fills in after check-in.`:m===3?`3 stations × ${L3} min. Whistle at ${T3[1]} and ${T3[2]}. ${w.stn?"Fast 5-swing rounds in the cage.":"In the cages, hitters rotate machine → tee → front toss every 8 minutes."}`:m===2?`2 stations × ${L2} min. Group in the pen throws while the rest catch and chart, then ${S.D.name.toLowerCase()}. Swap at ${T2[1]}.`:`One group, three ${L3}-minute blocks. Best night for one-on-one video.`;
+    return `<p class="hint">${t}</p>${rot}<div class="stations">${stationCard("P",w)}${stationCard("H",w)}${stationCard("D",w)}</div>${w.space?"":`<div class="flex"><b>Field taken?</b> Grounders move to the open turf or a cage: short hops, funnel footwork and quick transfers off a partner's roll.</div>`}<div class="flex"><b>Low turnout:</b> ${esc(w.low)}</div>`}
   if(b.k==="cond")return `<p><strong>${esc(w.C.t)}</strong></p><ul>${w.C.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
   if(b.k==="close")return `<p>${esc(w.X)}</p><p class="hint">Cooldown: band pull-aparts, sleeper stretch, cross-body stretch. Each coach gives one takeaway.</p>`;
   return `<p>${esc(b.txt)}</p>`;
@@ -766,7 +770,7 @@ function checkinHTML(w,present){
   const R=roster(),n=present.size,m=modeFor(n);
   return `<section class="card"><div class="ch"><h2>Check-in</h2><div class="row"><span class="count">${n}/${R.length}</span><span class="mode">${n?(m===3?"3 groups":m===2?"2 groups":"1 group"):"Tap as they arrive"}</span></div></div>
    <div class="roster">${R.map(p=>`<button class="chip" data-att="${p.n}" aria-pressed="${present.has(p.n)}"><span class="no">${p.n}</span><span class="nm">${esc(p.f)} ${esc(p.l)}${p.p?"<small>Pitcher</small>":""}</span></button>`).join("")}</div></section>
-  ${n?`<section class="card"><div class="ch"><h2>Groups</h2><span class="hint">Pitchers spread across groups</span></div>${groupsHTML(present)}</section>`:""}`;
+  ${n?`<section class="card"><div class="ch"><h2>Groups</h2><span class="hint">Pitchers spread across groups</span></div>${groupsHTML(present,w)}</section>`:""}`;
 }
 function notesHTML(w){return `<section class="card"><div class="ch"><h2>Coach notes</h2><span class="hint" id="nsave"></span></div><textarea id="notes-${w.id}" placeholder="What worked, who needs what next week, anything to tell parents…">${esc(note(w.id))}</textarea><p class="hint" style="margin-top:6px">Only coaches see these.</p></section>`}
 
@@ -836,6 +840,7 @@ function groupTool(w){
   return toolHead("plank")+`
    <div class="clock" id="clock">${mmss(el)}</div><div class="clock-sub">${hint}</div>
    ${gt.running?`<button class="go end" id="gend">End · log ${left} still up</button>`:gt.ended?`<button class="go" id="greset" style="font-size:26px">NEW ROUND</button>`:`<button class="go" id="gstart" ${inKids.length?"":"disabled"}>START</button>`}
+   ${!gt.running&&!gt.ended&&presentNums(w.id).size>=6?(()=>{const list=roster().filter(p=>presentNums(w.id).has(p.n)),m=modeFor(list.length),g=buildGroups(list,m);return `<div class="row" style="margin-top:12px"><span class="hint">Testing one group?</span>${g.map((gr,i)=>`<button class="btn ghost" style="min-height:34px;padding:4px 12px" data-pgrp="${gr.map(p=>p.n).join(",")}">Group ${"ABC"[i]}</button>`).join("")}<button class="btn ghost" style="min-height:34px;padding:4px 12px" data-pgrp="all">Everyone</button></div>`})():""}
    <div class="who-t">${inKids.length} in${gt.out.size?` · ${gt.out.size} sitting out`:""}</div>
    <div class="kgrid">${kids.map(p=>{const d=gt.done[p.n],out=gt.out.has(p.n),wb=weekBest(p.n,"plank",w.id),bb=bestOf(p.n,"plank");
      const cls=out?"out":d?(d.pr?"pr":"done"):gt.running?"live":"";
@@ -1138,6 +1143,7 @@ document.addEventListener("click",e=>{
     return}
   if(d.padfor!==undefined){if(d.padfor===""){toast("Pick a runner first");return}openPad(mt.act,Number(d.padfor));return}
   if(d.pad){openPad(mt.act,Number(d.pad));return}
+  if(d.pgrp){const keep=d.pgrp==="all"?null:new Set(d.pgrp.split(",").map(Number));gt.out=new Set(keep?whoList(w).filter(p=>!keep.has(p.n)).map(p=>p.n):[]);render();return}
   if(el.id==="gstart"){gt.running=true;gt.ended=false;gt.t0=performance.now();gt.done={};stayAwake();buzz(30);render();return}
   if(el.id==="gend"){const v=Math.round((performance.now()-gt.t0)/1000);whoList(w).filter(p=>!gt.out.has(p.n)&&!gt.done[p.n]).forEach(p=>{const r=logAttempt("plank",p.n,v);gt.done[p.n]={v,id:r.id,pr:r.pr}});gt.running=false;gt.ended=true;gt.elapsed=v;render();return}
   if(el.id==="greset"){gt={running:false,t0:0,ended:false,elapsed:0,out:gt.out,done:{},wid:w.id};render();return}
